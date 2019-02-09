@@ -1,0 +1,390 @@
+\documentclass[cjk,14pt,xcolor=dvipsnames,table,dvipdfmx,professional font,t,fragile]{beamer}
+\usetheme{Copenhagen}
+\usepackage{ulem}
+\usepackage{tabularx}
+\usepackage{fancybox}
+\usepackage{fancyvrb}
+\usepackage{float}
+\usepackage{multicol}
+\usepackage{minijs}
+\usepackage{amsmath}
+\usepackage{amssymb}
+%\usepackage{minted}
+\usepackage{ulem}
+\usepackage{newtxtext}
+\usepackage{listings, listings-rust}
+\usepackage{hyperref}
+
+
+\renewcommand{\familydefault}{\sfdefault}
+\renewcommand{\kanjifamilydefault}{\gtdefault}
+%
+\hypersetup{
+ pdfauthor={小林 克希},
+ pdftitle={RustBook勉強会},
+ pdfkeywords={Rust},
+ pdfsubject={},
+ pdfcreator={pLaTeX + dvipdfmx},
+ pdflang={Japanese}
+}
+%
+\newenvironment{commandline}%
+{\VerbatimEnvironment
+  \begin{Sbox}\begin{minipage}{0.9\hsize}\begin{fontsize}{8}{8} \color{white} \begin{BVerbatim}}%
+{\end{BVerbatim}\end{fontsize}\end{minipage}\end{Sbox}
+  \setlength{\fboxsep}{8pt}
+% start on a new paragraph
+
+\vspace{6pt}% skip before
+\fcolorbox{white}{black}{\TheSbox}
+
+\vspace{3pt}% skip after
+}
+%end of commandlinesmall
+
+\begin{document}
+\title{RustBook勉強会}
+\subtitle{11. Testing}
+\author{Katsuki Kobayashi}
+\date{2019-02?}
+
+\maketitle
+
+\begin{frame}{予めお詫び}
+ \begin{itemize}
+  \item 発表者はC言語/ARMアセンブラのみ書ける
+  \item ということで、他の言語とかさっぱりです
+	\begin{itemize}
+	 \item 「あの言語では〜〜」とかいうのは\\
+	       全体に聞いてください
+	 \item 不幸にも最近C++の本を読まされています\\
+	       タスケテ
+	\end{itemize}
+  \item 社風:「テスト? なにそれ食べられるの?」
+  \item 「世間一般ではこんな感じ」的なツッコミ歓迎
+ \end{itemize}
+\end{frame}
+
+\begin{frame}{自動テストを書こう!}
+ \begin{itemize}
+  \item ダイクストラ先生曰く(1972年のエッセイ)
+	\begin{itemize}
+	 \item 	{\scriptsize
+		``Program testing can be very effective way to show the presence of bugs,
+		but it is hopelessly inadequate for showing their absence.''}
+	 \item バグの存在を示す効果的な方法ではあるが、\\
+	       無い事を示すには絶望的に不充分である
+	\end{itemize}
+  \item でも、「テストを頑張るべきではない」、\\
+	という意味ではない
+ \end{itemize}
+\end{frame}
+
+\begin{frame}{正確さ(correctness)}
+ \begin{itemize}
+  \item Rustは正確さについてかなり考えられている
+	\begin{itemize}
+	 \item が、やっぱり正確であることの証明は大変
+	\end{itemize}
+  \item Rustの型システムはこの重役を担っている
+	\begin{itemize}
+	 \item が、型だけで不正確を全部抑えられない
+	\end{itemize}
+  \item というわけで、Rustは言語レベルでの\\
+	テストの自動化をサポートします
+ \end{itemize}
+\end{frame}
+
+\begin{frame}{例: \texttt{add\_two()} (1/2)}
+ \begin{itemize}
+  \item \texttt{add\_two()}
+	\begin{itemize}
+	 \item 入力された値に2を加えて返す関数
+	 \item 入出力はともに整数
+	\end{itemize}
+  \item コンパイルするとRustがチェック
+	\begin{itemize}
+	 \item 型の一致 (Stringを入れたらエラー)
+	 \item borrow (変な参照をしたらエラー)
+	\end{itemize}
+  \item 関数の挙動はノーチェック
+	\begin{itemize}
+	 \item $10$ 足されようが $50$ 引かれようが\\
+	       エラーにはならない
+	\end{itemize}
+  \item 「自動テスト」の出番
+ \end{itemize}
+\end{frame}
+
+\begin{frame}{例: \texttt{add\_two()} (2/2)}
+ \begin{itemize}
+  \item テストの方法の例
+	\begin{itemize}
+	 \item $3$ を与えたら $5$ を返すとassertをする
+	 \item このテストを、コードの変更の度に行なう
+	 \item 正しい挙動をしている事を確認
+	\end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}{このチャプターは}
+ \begin{itemize}
+  \item テストは難しい
+	\begin{itemize}
+	 \item このチャプター
+	\end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}{How to Write Tests}
+ \begin{itemize}
+  \item Rustのテスト
+	\begin{itemize}
+	 \item コードが期待通り動くかを確認するテスト関数
+	\end{itemize}
+  \item テスト関数では一般に以下の3つのアクションを実行
+	\begin{itemize}
+	 \item 必要なデータや状態を準備する
+	 \item テストしたいコードを実行する
+	 \item 結果が期待通りかアサートする
+	\end{itemize}
+  \item 以降、Rustがテストのために提供しているものを紹介
+	\begin{itemize}
+	 \item \texttt{test} attribute
+	 \item マクロ
+	 \item \texttt{should\_panic} attribute、等
+	\end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim]{The Anatomy of a Test Function}
+ \begin{itemize}
+  \item ぶっちゃけ、Rustのテストとは\\
+	\texttt{test} attribute をつけた関数のこと
+	\begin{itemize}
+	 \item attribute: Chapt. 5で使った \texttt{derive} とか
+	\end{itemize}
+  \item test attributeの付け方: \\
+	\hspace{2zw} \texttt{fn} の前に \verb|#[test]| を付ける
+  \item \texttt{test} attributeを付けると
+	\begin{itemize}
+	 \item \texttt{cargo test}コマンド
+	 \item テストランナーをビルドして実行
+	 \item レポートを表示 (passes or fails)
+	\end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim]{The Anatomy of a Test Function(1/6)}
+ \begin{itemize}
+  \item \verb|cargo new adder --lib| する
+ \end{itemize}
+ \begin{commandline}
+% cargo new adder --lib
+      Created library `adder` package
+ \end{commandline}
+ \begin{itemize}
+  \item \texttt{src/libs.rs} が以下の内容で作成される
+ \end{itemize}
+ {\scriptsize
+ \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn it_works() {
+        assert_eq!(2 + 2, 4);
+    }
+}\end{lstlisting}}
+ \begin{itemize}
+  \item とりあえず \verb|#[cfg(test)]| と \verb|mod tests| の行は無視
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim]{The Anatomy of a Test Function(2/6)}
+ \mbox{}
+ {\scriptsize
+ \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn it_works() {
+        assert_eq!(2 + 2, 4);
+    }
+}\end{lstlisting}}
+ \begin{itemize}
+  \item \verb|#[test]|
+	\begin{itemize}
+	 \item テスト関数を示す
+	 \item 共通処理等を書く非テスト関数も書けるように
+	\end{itemize}
+  \item \verb|assert_eq!(2 + 2, 4)|
+	\begin{itemize}
+	 \item $2 + 2$ が $4$ である事をアサート
+	\end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim]{The Anatomy of a Test Function(3/6)}
+ \begin{commandline}
+% cargo test
+   Compiling adder v0.1.0 (/home/rare/work/slides/RustBook/samples/adder)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.53s
+     Running target/debug/deps/adder-1d0dfd1494bab5c6
+
+running 1 test
+test tests::it_works ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+
+   Doc-tests adder
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+ \end{commandline}
+ \begin{itemize}
+  \item \href{https://play.integer32.com/?version=stable&mode=debug&edition=2018&gist=ce8ee04d2dcc2311a14efc8090ebda51}
+	{PlayGround} でもテストできる……
+  \item ignored, filteredについては次節で説明
+  \item measuredについては現在はnightlyだけの機能
+	\begin{itemize}
+	 \item ベンチマークテスト用
+	\end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim]{The Anatomy of a Test Function(4/6)}
+ \begin{itemize}
+  \item \verb|Doc-tests adder| という出力がある
+	\begin{itemize}
+	 \item ドキュメントテストの結果
+	 \item APIのドキュメントのコーディング例もコンパイル/テスト可能
+	 \item ドキュメントとコードの同期に役立つ!!
+	\end{itemize}
+  \item Chapt. 14 ``Documentation Comments'' でやるのでスルーします
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim]{The Anatomy of a Test Function(5/6)}
+ \begin{itemize}
+  \item テストの名前を変更
+	\begin{itemize}
+	 \item \verb|it_works()| を \verb|exploration()| にしてみる
+	 \item  \href{https://play.integer32.com/?version=stable&mode=debug&edition=2018&gist=dc15fce8e988e1efd0a2dd8d8d87dd27}
+		{PlayGround}
+	 \item 無事に結果の表示に反映
+	\end{itemize}
+ \end{itemize}
+ \begin{commandline}
+running 1 test
+test tests::exploration ... ok
+ \end{commandline}
+\end{frame}
+
+\begin{frame}[containsverbatim]{The Anatomy of a Test Function(6/6)}
+ \begin{itemize}
+  \item 失敗するテストを入れてみる
+	\begin{itemize}
+	 \item \verb|panic!| マクロを使って \verb|another()| 関数を作る
+	 \item \href{https://play.integer32.com/?version=stable&mode=debug&edition=2018&gist=71238afa6168ec8b26d4bf761d6404a6}
+	       {PlayGround}
+	\end{itemize}
+ \end{itemize}
+ {\scriptsize
+ \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+    #[test]
+    fn another() {
+        panic!("Make this test fail");
+    }\end{lstlisting}}
+ \begin{itemize}
+  \item 無事失敗する (前回より2つ項目が増えてる)
+ \end{itemize}
+ \vspace*{-10pt}
+ \begin{commandline}
+test tests::another ... FAILED
+
+failures:
+
+---- tests::another stdout ----
+thread 'tests::another' panicked at 'Make this test fail!', src/lib.rs:10:9
+
+failures:
+    tests::another
+ \end{commandline}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Checking Results with the assert! (1/)}
+ \begin{itemize}
+  \item \verb|assert!| マクロ
+	\begin{itemize}
+	 \item true: 何もしない
+	 \item false: \verb|panic!| をコール
+	\end{itemize}
+  \item Chapt. 5の \texttt{Rectanble}構造体を例に
+	\begin{itemize}
+	 \item 	\href{https://play.integer32.com/?version=stable&mode=debug&edition=2018&gist=dc15fce8e988e1efd0a2dd8d8d87dd27}
+		{PlayGround}
+	\end{itemize}
+ \end{itemize}
+ {\scriptsize
+ \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+#[derive(Debug)]
+pub struct Rectangle {
+    length: u32,
+    width: u32,
+}
+
+impl Rectangle {
+    pub fn can_hold(&self, other: &Rectangle) -> bool {
+        self.length > other.length && self.width > other.width
+    }
+}\end{lstlisting}}
+
+\end{frame}
+
+\begin{frame}[containsverbatim]{Checking Results with the assert! (2/)}
+\mbox{}
+ {\scriptsize
+ \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+#[derive(Debug)]
+pub struct Rectangle {
+    length: u32,
+    width: u32,
+}
+
+impl Rectangle {
+    pub fn can_hold(&self, other: &Rectangle) -> bool {
+        self.length > other.length && self.width > other.width
+    }
+}\end{lstlisting}}
+ \begin{itemize}
+   \item \verb|can_hold()| メソッド
+	 \begin{itemize}
+	  \item ブール値を返す\\
+		\hspace{3zw} $\rightarrow$ \verb|assert!| でのテストに最適!!
+	  \item \verb|length| が $8$ , \verb|width| が $7$ の \verb|Rectangle| が\\
+		\verb|length| が $5$ , \verb|width| が $1$ の \verb|Rectangle|
+		をholdできる事をテスト
+	 \end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Checking Results with the assert! (3/)}
+ \mbox{}
+ {\scriptsize
+ \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+    #[test]
+    fn larger_can_hold_smaller() {
+        let larger = Rectangle { length: 8, width: 7 };
+        let smaller = Rectangle { length: 5, width: 1 };
+
+        assert!(larger.can_hold(&smaller));
+    }\end{lstlisting}}
+\begin{itemize}
+ \item \href{https://play.integer32.com/?version=stable&mode=debug&edition=2018&gist=cdf6bb94826b7c2d369e3419ac251cac}
+       {PlayGround}
+\end{itemize}
+\end{frame}
+
+\end{document}
+
