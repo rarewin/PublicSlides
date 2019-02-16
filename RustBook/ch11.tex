@@ -46,7 +46,7 @@
 \title{RustBook勉強会}
 \subtitle{11. Testing}
 \author{Katsuki Kobayashi}
-\date{2019-02?}
+\date{2019-02-23}
 
 \maketitle
 
@@ -129,9 +129,18 @@
 
 \begin{frame}{このチャプターは}
  \begin{itemize}
-  \item テストは難しい
+  \item テストは難しいので
 	\begin{itemize}
-	 \item このチャプター
+	 \item 良いテストの詳細についてはカバーしない
+	 \item Rustののテストのための機能について議論する
+	\end{itemize}
+  \item 取り扱う内容
+	\begin{itemize}
+	 \item アノテーション
+	 \item マクロ
+	 \item デフォルトの挙動
+	 \item オプション
+	 \item unit testとintegration testの構成方法
 	\end{itemize}
  \end{itemize}
 \end{frame}
@@ -157,7 +166,7 @@
  \end{itemize}
 \end{frame}
 
-\begin{frame}[containsverbatim]{The Anatomy of a Test Function}
+\begin{frame}[containsverbatim]{The Anatomy of a Test Function(1/7)}
  \begin{itemize}
   \item ぶっちゃけ、Rustのテストとは\\
 	\texttt{test} attribute をつけた関数のこと
@@ -175,7 +184,7 @@
  \end{itemize}
 \end{frame}
 
-\begin{frame}[containsverbatim]{The Anatomy of a Test Function(1/6)}
+\begin{frame}[containsverbatim]{The Anatomy of a Test Function(2/7)}
  \begin{itemize}
   \item \verb|cargo new adder --lib| する
  \end{itemize}
@@ -200,7 +209,7 @@ mod tests {
  \end{itemize}
 \end{frame}
 
-\begin{frame}[containsverbatim]{The Anatomy of a Test Function(2/6)}
+\begin{frame}[containsverbatim]{The Anatomy of a Test Function(3/7)}
  \mbox{}
  {\scriptsize
  \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
@@ -224,7 +233,7 @@ mod tests {
  \end{itemize}
 \end{frame}
 
-\begin{frame}[containsverbatim]{The Anatomy of a Test Function(3/6)}
+\begin{frame}[containsverbatim]{The Anatomy of a Test Function(4/7)}
  \begin{commandline}
 % cargo test
    Compiling adder v0.1.0 (/home/rare/work/slides/RustBook/samples/adder)
@@ -244,7 +253,7 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
  \end{commandline}
  \begin{itemize}
   \item \href{https://play.integer32.com/?version=stable&mode=debug&edition=2018&gist=ce8ee04d2dcc2311a14efc8090ebda51}
-	{PlayGround} でもテストできる……
+	{Playground} でもテストできる……
   \item ignored, filteredについては次節で説明
   \item measuredについては現在はnightlyだけの機能
 	\begin{itemize}
@@ -253,7 +262,7 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
  \end{itemize}
 \end{frame}
 
-\begin{frame}[containsverbatim]{The Anatomy of a Test Function(4/6)}
+\begin{frame}[containsverbatim]{The Anatomy of a Test Function(5/7)}
  \begin{itemize}
   \item \verb|Doc-tests adder| という出力がある
 	\begin{itemize}
@@ -265,13 +274,13 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
  \end{itemize}
 \end{frame}
 
-\begin{frame}[containsverbatim]{The Anatomy of a Test Function(5/6)}
+\begin{frame}[containsverbatim]{The Anatomy of a Test Function(6/7)}
  \begin{itemize}
   \item テストの名前を変更
 	\begin{itemize}
 	 \item \verb|it_works()| を \verb|exploration()| にしてみる
 	 \item  \href{https://play.integer32.com/?version=stable&mode=debug&edition=2018&gist=dc15fce8e988e1efd0a2dd8d8d87dd27}
-		{PlayGround}
+		{Playground}
 	 \item 無事に結果の表示に反映
 	\end{itemize}
  \end{itemize}
@@ -281,13 +290,13 @@ test tests::exploration ... ok
  \end{commandline}
 \end{frame}
 
-\begin{frame}[containsverbatim]{The Anatomy of a Test Function(6/6)}
+\begin{frame}[containsverbatim]{The Anatomy of a Test Function(7/7)}
  \begin{itemize}
   \item 失敗するテストを入れてみる
 	\begin{itemize}
 	 \item \verb|panic!| マクロを使って \verb|another()| 関数を作る
 	 \item \href{https://play.integer32.com/?version=stable&mode=debug&edition=2018&gist=71238afa6168ec8b26d4bf761d6404a6}
-	       {PlayGround}
+	       {Playground}
 	\end{itemize}
  \end{itemize}
  {\scriptsize
@@ -313,7 +322,7 @@ failures:
  \end{commandline}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Checking Results with the assert! (1/)}
+\begin{frame}[containsverbatim]{Checking Results with the assert! (1/5)}
  \begin{itemize}
   \item \verb|assert!| マクロ
 	\begin{itemize}
@@ -323,7 +332,7 @@ failures:
   \item Chapt. 5の \texttt{Rectanble}構造体を例に
 	\begin{itemize}
 	 \item 	\href{https://play.integer32.com/?version=stable&mode=debug&edition=2018&gist=dc15fce8e988e1efd0a2dd8d8d87dd27}
-		{PlayGround}
+		{Playground}
 	\end{itemize}
  \end{itemize}
  {\scriptsize
@@ -342,7 +351,7 @@ impl Rectangle {
 
 \end{frame}
 
-\begin{frame}[containsverbatim]{Checking Results with the assert! (2/)}
+\begin{frame}[containsverbatim]{Checking Results with the assert! (2/5)}
 \mbox{}
  {\scriptsize
  \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
@@ -369,8 +378,14 @@ impl Rectangle {
  \end{itemize}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Checking Results with the assert! (3/)}
- \mbox{}
+\begin{frame}[containsverbatim]{Checking Results with the assert! (3/5)}
+ \begin{itemize}
+  \item \verb|larger_can_hold_smaller()| テスト
+	\begin{itemize}
+	 \item \href{https://play.integer32.com/?version=stable&mode=debug&edition=2018&gist=cdf6bb94826b7c2d369e3419ac251cac}
+	       {Playground} (\verb|use super::*;| する必要あり)
+	\end{itemize}
+ \end{itemize}
  {\scriptsize
  \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
     #[test]
@@ -380,10 +395,538 @@ impl Rectangle {
 
         assert!(larger.can_hold(&smaller));
     }\end{lstlisting}}
+ \begin{commandline}
+running 1 test
+test tests::larger_can_hold_smaller ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+ \end{commandline}
+ \begin{itemize}
+  \item \verb|can_hold(0)| は \texttt{true} を返すのでpassする
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Checking Results with the assert! (4/5)}
+ \begin{itemize}
+  \item \verb|smaller_cannot_hold_larger()| テスト
+	\begin{itemize}
+	 \item \href{https://play.integer32.com/?version=stable&mode=debug&edition=2018&gist=6eff4f70eba2b909a0cd377e1ebad141}
+	       {Playground}
+	\end{itemize}
+ \end{itemize}
+ {\scriptsize
+ \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+    #[test]
+    fn smaller_cannot_hold_larger() {
+        let larger = Rectangle { length: 8, width: 7 };
+        let smaller = Rectangle { length: 5, width: 1 };
+
+        assert!(!smaller.can_hold(&larger));  // '!' がミソ
+    }\end{lstlisting}}
+ \begin{commandline}
+running 2 tests
+test tests::larger_can_hold_smaller ... ok
+test tests::smaller_cannot_hold_larger ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+ \end{commandline}
+ \begin{itemize}
+  \item \verb|smaller_cannot_hold_larger()| が \verb|false| を返すのでpassする
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Checking Results with the assert! (5/5)}
+ \begin{itemize}
+  \item バグを仕込んでみる
+	\begin{itemize}
+	 \item \texttt{length} の不等号が逆
+	 \item \href{https://play.integer32.com/?version=stable&mode=debug&edition=2018&gist=67c1f9b79733a2ebeec35d8556b00ca4}
+	       {Playground}
+	\end{itemize}
+ \end{itemize}
+ {\scriptsize
+ \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+impl Rectangle {
+    pub fn can_hold(&self, other: &Rectangle) -> bool {
+        self.length < other.length && self.width > other.width
+    } //            ^
+}\end{lstlisting}}
 \begin{itemize}
- \item \href{https://play.integer32.com/?version=stable&mode=debug&edition=2018&gist=cdf6bb94826b7c2d369e3419ac251cac}
-       {PlayGround}
+ \item 目論見通りfailする
 \end{itemize}
+\begin{commandline}
+running 2 tests
+test tests::larger_can_hold_smaller ... FAILED
+test tests::smaller_cannot_hold_larger ... ok
+
+failures:
+
+---- tests::larger_can_hold_smaller stdout ----
+thread 'tests::larger_can_hold_smaller' panicked at 'assertion failed: larger.can_hold(&smaller)', src/lib.rs:29:9
+note: Run with `RUST_BACKTRACE=1` for a backtrace.
+\end{commandline}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Testing Equality with the assert\_eq! (1/4)}
+ \begin{itemize}
+  \item テストの一般的な方法は期待値と結果の比較
+	\begin{itemize}
+	 \item \verb|assert!| マクロに $==$ を渡してもよい
+	 \item \verb|assert_eq!|,  \verb|assert_ne!| マクロもある
+	 \item これらは期待値と結果の両方を表示してくれる
+	\end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Testing Equality with the assert\_eq! (2/4)}
+ \begin{itemize}
+  \item \verb|add_two()| による例:
+	\href{https://play.integer32.com/?version=stable&mode=debug&edition=2018&gist=3e41a536cc2029885d833562d24c9a30}
+	{(Playground)}
+ \end{itemize}
+ {\scriptsize
+ \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+fn main() {}
+pub fn add_two(a: i32) -> i32 {
+    a + 2
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn it_adds_two() {
+        assert_eq!(4, add_two(2));
+    }
+}\end{lstlisting}}
+\begin{commandline}
+test tests::it_adds_two ... ok
+\end{commandline}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Testing Equality with the assert\_eq! (3/4)}
+ \begin{itemize}
+  \item 失敗するようにする
+	\href{https://play.integer32.com/?version=stable&mode=debug&edition=2018&gist=dfd0a140bf3dcd3168db3debdf3e064b}
+	{(Playground)}
+ \end{itemize}
+
+ {\scriptsize
+ \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+fn main() {}
+pub fn add_two(a: i32) -> i32 {
+    a + 3   // なぜか3 を足す
+}\end{lstlisting}}
+\begin{commandline}
+thread 'tests::it_adds_two' panicked at 'assertion failed: `(left == right)`
+  left: `4`,
+ right: `5`', src/lib.rs:11:9
+\end{commandline}
+\begin{itemize}
+ \item \texttt{left}と\texttt{right}が表示される
+       \begin{itemize}
+	\item 他の言語やテストフレームワークだと
+	      \texttt{expected} と \texttt{actual} と呼んだりする
+	\item Rustは期待値と結果の順番を気にしないので
+	      \verb|assert_eq!(add_two(2), 4);| としてもOK
+       \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Testing Equality with the assert\_eq! (4/4)}
+ \begin{itemize}
+  \item \verb|assert_ne!|マクロもある
+	\begin{itemize}
+	 \item $2$つの値が異なればpass、等しければfail
+	 \item 「結果が正確に解らないが特定の値にはならない」
+	       というテストに使う
+	 \item 例えば、結果が実行する時間によって変化するもの
+	\end{itemize}
+  \item \verb|assert_eq!|と\verb|assert_ne!|
+	\begin{itemize}
+	 \item 使用する値には PartialEq と Debugトレイトが実装されている必要がある
+	       \begin{itemize}
+		\item '$==$' と '$!=$' で比較
+		\item 結果をデバッグフォーマットで表示する
+	       \end{itemize}
+	 \item 独自に実装した構造体やenumについては
+	       \verb|#[derive(PartialEq, Debug)]| と付ければ大抵OK
+	\end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Adding Custom Failure Messages(1/5)}
+ \begin{itemize}
+  \item 失敗時のメッセージを追加できる
+	\begin{itemize}
+	 \item \verb|assert!|, \verb|assert_eq!|, \verb|assert_ne!| マクロの
+	       引数の続きに \verb|format!| マクロに渡す引数を付ける
+	 \item ``\verb|{}| textholder''を書いて値を表示できる
+	\end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Adding Custom Failure Messages(2/5)}
+ \begin{itemize}
+  \item greet関数による例
+	\begin{itemize}
+	 \item (\href{https://play.integer32.com/?version=stable&mode=debug&edition=2018&gist=0253d4f4ae81c9de7103a3453bd8290b}
+	       {Playground})
+	\end{itemize}
+ \end{itemize}
+ {\scriptsize
+ \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+pub fn greeting(name: &str) -> String {
+    format!("Hello {}!", name)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn greeting_contains_name() {
+        let result = greeting("Carol");
+        assert!(result.contains("Carol"));
+    }
+}
+\end{lstlisting}}
+ \begin{itemize}
+  \item 今後の仕様変化への対応のため、出力に引数(名前)が含まれているかでテストしている
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Adding Custom Failure Messages(3/5)}
+ \begin{itemize}
+  \item 当然、テストは通る
+ \end{itemize}
+\begin{commandline}
+running 1 test
+test tests::greeting_contains_name ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+\end{commandline}
+ \begin{itemize}
+  \item では、壊しましょう
+	\begin{itemize}
+	 \item \href{https://play.integer32.com/?version=stable&mode=debug&edition=2018&gist=d37ff552d3017ee02fcc5f8e1eb1bcef}
+	       {(Playground)}
+	\end{itemize}
+ \end{itemize}
+ {\scriptsize
+ \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+pub fn greeting(_name: &str) -> String {
+    String::from("Hello!") // 引数を含まないように
+}
+\end{lstlisting}}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Adding Custom Failure Messages(4/5)}
+ \begin{itemize}
+  \item 壊れました
+ \end{itemize}
+ \begin{commandline}
+failures:
+
+---- tests::greeting_contains_name stdout ----
+thread 'tests::greeting_contains_name' panicked at \
+'assertion failed: result.contains("Carol")', src/lib.rs:12:9
+note: Run with `RUST_BACKTRACE=1` for a backtrace.
+ \end{commandline}
+\begin{itemize}
+ \item でも
+       \begin{itemize}
+	\item テストが失敗した\texttt{assert}の内容だけ表示される
+	      \begin{itemize}
+	       \item \verb|result.contains("Carol")|
+	      \end{itemize}
+	\item \verb|greeting()| 関数の出力を表示した方が便利
+       \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Adding Custom Failure Messages(5/5)}
+ \begin{itemize}
+  \item テストを変更する
+	\begin{itemize}
+	 \item \href{https://play.integer32.com/?version=stable&mode=debug&edition=2018&gist=1a0c93fc1cad391ba20a1a70a80efff7}
+	       {(Playground)}
+	\end{itemize}
+ \end{itemize}
+ {\scriptsize
+ \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+#[test]
+fn greeting_contains_name() {
+    let result = greeting("Carol");
+    assert!(
+        result.contains("Carol"),
+        "Greeting did not contain name, value was `{}`", result
+    );
+}\end{lstlisting}}
+ \begin{commandline}
+failures:
+
+---- tests::greeting_contains_name stdout ----
+thread 'tests::greeting_contains_name' panicked at \
+'Greeting did not contain name, value was `Hello!`', src/lib.rs:12:9
+note: Run with `RUST_BACKTRACE=1` for a backtrace.
+ \end{commandline}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Panic with \texttt{should\_panic} (1/8)}
+ \begin{itemize}
+  \item 結果が正しいかのチェックだけでなく、
+	エラー条件についてのチェックも重要
+  \item 例として \texttt{Guess} type(9章)で説明します
+	\begin{itemize}
+	 \item 構造体のvalueフィールド: $1 \sim 100$
+	 \item \verb|new()|メソッドで値が範囲外なpanicする
+	\end{itemize}
+ \end{itemize}
+ {\scriptsize \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+pub struct Guess {
+    value: i32,
+}
+impl Guess {
+    pub fn new(value: i32) -> Guess {
+        if value < 1 || value > 100 {
+            panic!("Guess value must be between 1 and 100, got {}.", value);
+        }
+        Guess {
+            value
+        }
+    }
+}\end{lstlisting}}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Panic with \texttt{should\_panic} (2/8)}
+ \begin{itemize}
+  \item 範囲外の値を入れてpanicさせるテストを書く
+	\begin{itemize}
+	 \item attributeを追加する : \verb|should_panic|
+	 \item panicしたらpass, しなかったらfail
+	 \item \href{https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=d997d3b4a728cac8457b9bbc650e78bf}
+	       {(Playground)}
+	\end{itemize}
+ \end{itemize}
+ \vspace{-.5zw}
+ {\scriptsize
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    #[should_panic]  // 順番は逆でも良い模様
+    fn greater_than_100() {
+        Guess::new(200);
+    }
+}\end{lstlisting}}
+ \vspace{-.5zw}
+\begin{commandline}
+running 1 test
+test tests::greater_than_100 ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+\end{commandline}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Panic with \texttt{should\_panic} (3/8)}
+ \begin{itemize}
+  \item バグを仕込みましょう
+	\begin{itemize}
+	 \item \href{https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=69a9efedbdf8007e106163ab5236cf52}
+	       {(Playground)}
+	\end{itemize}
+ \end{itemize}
+ {\scriptsize
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+impl Guess {
+    pub fn new(value: i32) -> Guess {
+        if value < 1 /* 100より大きい条件を消す */ {
+            panic!("Guess value must be between 1 and 100, got {}.", value);
+        }
+        Guess {
+            value
+        }
+    }
+}\end{lstlisting}}
+\begin{itemize}
+ \item 無事に失敗する
+\end{itemize}
+\begin{commandline}
+running 1 test
+test tests::greater_than_100 ... FAILED
+\end{commandline}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Panic with \texttt{should\_panic} (4/8)}
+ \begin{commandline}
+running 1 test
+test tests::greater_than_100 ... FAILED
+ \end{commandline}
+\begin{itemize}
+ \item メッセージが不親切
+ \item 加えて、\verb|should_panic|は不正確になりがち
+       \begin{itemize}
+	\item テストが期待とは異なるpanicを起こしてもpassする
+       \end{itemize}
+ \item もうちょっと親切かつ正確にするために \verb|expected| パラメーターを
+       \verb|should_panic| attributeに追加する
+\end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Panic with \texttt{should\_panic} (5/8)}
+ \begin{itemize}
+  \item \verb|new()|メソッドを変更
+	\begin{itemize}
+	 \item 初期値が大きすぎるか、
+	       小さすぎるかで、panic時のメッセージを変更する
+	\end{itemize}
+ \end{itemize}
+ {\scriptsize
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+pub fn new(value: i32) -> Guess {
+    if value < 1 {
+        panic!("Guess value must be greater than or equal to 1, got {}.",
+               value);
+    } else if value > 100 {
+        panic!("Guess value must be less than or equal to 100, got {}.",
+               value);
+    }
+}\end{lstlisting}}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Panic with \texttt{should\_panic} (6/8)}
+ \begin{itemize}
+  \item \verb|should_panic| に \verb|expected| パラメータ
+	\begin{itemize}
+	 \item \href{https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=498dda42617ff9de462a2edb7ef82a05}
+	       {(Playground)}
+	 \item panic時のメッセージのsubstringを指定する
+	\end{itemize}
+ \end{itemize}
+ {\scriptsize
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    #[should_panic(
+        expected = "Guess value must be less than or equal to 100")]
+    fn greater_than_100() {
+        Guess::new(200);
+    }
+}\end{lstlisting}}
+\begin{commandline}
+running 1 test
+test tests::greater_than_100 ... ok
+\end{commandline}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Panic with \texttt{should\_panic} (7/8)}
+ \begin{itemize}
+  \item バグを仕込む
+	\begin{itemize}
+	 \item panicの文言を入れ替えた
+	 \item \href{https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=0062381305db283f03f7511fcaabd1c2}
+	       {(Playground)}
+	\end{itemize}
+ \end{itemize}
+ {\scriptsize
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+if value < 1 {
+    panic!("Guess value must be less than or equal to 100, got {}.",
+           value);
+} else if value > 100 {
+    panic!("Guess value must be greater than or equal to 1, got {}.",
+           value);
+}\end{lstlisting}}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Panic with \texttt{should\_panic} (8/8)}
+\begin{itemize}
+ \item 無事失敗する
+       \begin{itemize}
+	\item パニックの文言が表示
+	\item 表示されるべき文言がnoteに表示
+       \end{itemize}
+\end{itemize}
+\begin{commandline}
+failures:
+
+---- tests::greater_than_100 stdout ----
+thread 'tests::greater_than_100' panicked at \
+'Guess value must be greater than or equal to 1, got 200.', src/lib.rs:14:13
+note: Run with `RUST_BACKTRACE=1` for a backtrace.
+note: Panic did not include expected string \
+'Guess value must be less than or equal to 100'
+\end{commandline}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Using \texttt{Result<T,E>} (1/3)}
+ \begin{itemize}
+  \item ここまで、テストに \verb|panic!| を使ってきた
+  \item テストには \verb|Result<T, E>| も使える
+	\begin{itemize}
+	 \item 先程見た \verb|it_works()| 関数を \verb|Result| で書き換え
+	 \item 成功時に \verb|Ok(())| を返し、失敗時に文言を含んだ \verb|Err| を返す
+	 \item \href{https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=774593cbe99583e34456249c55b26116}
+	       {(Playground)}
+	\end{itemize}
+ \end{itemize}
+ {\scriptsize
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn it_works() -> Result<(), String> {
+        if 2 + 2 == 4 {
+            Ok(())
+        } else {
+            Err(String::from("two plus two does not equal four"))
+        }
+    }
+}\end{lstlisting}}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Using \texttt{Result<T,E>} (2/3)}
+ \begin{itemize}
+  \item 出力
+ \end{itemize}
+\begin{commandline}
+test tests::it_works ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+\end{commandline}
+
+\begin{itemize}
+ \item (追試): $2 + 2$ を $2 + 3$ としたら以下のように
+       \begin{itemize}
+	\item \verb|assert_eq!| みたいな出力だが
+	      \begin{itemize}
+	       \item 左辺はエラー結果(非0)の値を意味している模様
+	       \item 右辺は成功時の結果(0)
+	      \end{itemize}
+       \end{itemize}
+\end{itemize}
+\begin{commandline}
+Error: "two plus two does not equal four"
+thread 'tests::it_works' panicked at \
+'assertion failed: `(left == right)`
+  left: `1`,
+ right: `0`: the test returned a termination value \
+with a non-zero status code (1) which indicates a failure', src/libtest/lib.rs:337:5
+\end{commandline}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Using \texttt{Result<T,E>} (3/3)}
+ \begin{itemize}
+  \item この方法を使う場合 \verb|#[should_panic]| は使えない
+  \item 替わりに \verb|Err| を返すようにしましょう
+ \end{itemize}
 \end{frame}
 
 \end{document}
