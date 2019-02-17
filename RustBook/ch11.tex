@@ -929,5 +929,328 @@ with a non-zero status code (1) which indicates a failure', src/libtest/lib.rs:3
  \end{itemize}
 \end{frame}
 
-\end{document}
+\begin{frame}[containsverbatim]{Controlling How Tests Are Run (1/2)}
+ \begin{itemize}
+  \item \verb|cargo test| コマンド
+	\begin{itemize}
+	 \item テストモードでコードをコンパイルし実行
+	 \item デフォルトでは全てのテストをパラレルで実行し、
+	       実行中に生成された出力をキャプチャする
+	 \item コマンドラインオプションで挙動を変更できる
+	\end{itemize}
+  \item オプションは2種類ある
+	\begin{itemize}
+	 \item \verb|cargo test| へのオプション
+	 \item テストバイナリへのオプション
+	\end{itemize}
+  \item 2種類のオプションはセパレーター ''\verb|--| (ハイフン2つ)`` で分割する
+ \end{itemize}
+\end{frame}
 
+\begin{frame}[containsverbatim]{Controlling How Tests Are Run (2/2)}
+\vspace*{-10pt}
+\begin{commandline}
+% cargo test --help | head
+cargo-test
+Execute all unit and integration tests of a local package
+
+USAGE:
+    cargo test [OPTIONS] [TESTNAME] [-- <args>...]
+
+OPTIONS:
+        --lib                       Test only this package's library
+        --bin <NAME>...             Test only the specified binary
+        --bins                      Test all binaries
+% cargo test -- --help | head
+   Compiling hello v0.1.0 (/tmp/hello)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.59s
+     Running target/debug/deps/hello-ef71f4ccd46d6561
+Usage: --help [OPTIONS] [FILTER]
+
+Options:
+        --include-ignored
+                        Run ignored and not ignored tests
+        --ignored       Run only ignored tests
+        --test          Run tests and not benchmarks
+        --bench         Run benchmarks instead of tests
+        --list          List all tests and benchmarks
+    -h, --help          Display this message (longer with --help)
+\end{commandline}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Running Tests in Parallel or Conse...(1/2)}
+ \begin{itemize}
+  \item デフォルトでは複数のテストをスレッドで並列実行する
+	\begin{itemize}
+	 \item フィードバックを高速に受け取れる
+	 \item ワークスペースの状態や環境変数に依存していない必要がある
+	\end{itemize}
+  \item 駄目な例
+	\begin{itemize}
+	 \item いくつかのテストが text-output.txt にデータを書く
+	 \item 各テストがファイルのデータの値によってassertする
+	\end{itemize}
+  \item 駄目な例の解決方法
+	\begin{itemize}
+	 \item ファイル名を変更する
+	 \item 同時に実行されないようにする
+	\end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Running Tests in Parallel or Conse...(2/2)}
+ \begin{itemize}
+  \item \verb|--test-threads|
+	\begin{itemize}
+	 \item テストバイナリ用のオプション
+	 \item テストに使うスレッドの数を指定
+	\end{itemize}
+ \end{itemize}
+\begin{commandline}
+% cargo test -- --test-threads=1
+\end{commandline}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Showing Function Output(1/5)}
+\begin{itemize}
+ \item デフォルトではテストがpassした場合標準出力は捨てられる
+ \item \verb|println!()| を使った関数での例
+\end{itemize}
+ {\scriptsize
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+fn prints_and_returns_10(a: i32) -> i32 {
+    println!("I got the value {}", a);
+    10
+}\end{lstlisting}}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Showing Function Output(2/5)}
+\begin{itemize}
+ \item テストコード
+       \begin{itemize}
+	\item \href{https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=913e7b544d281420871a9dea82522845}
+	      {(Playground)} {\tiny ただし、Playgroundではコマンドラインオプションが渡せない……!}
+       \end{itemize}
+\end{itemize}
+ {\scriptsize
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn this_test_will_pass() {
+        let value = prints_and_returns_10(4);
+        assert_eq!(10, value);
+    }
+
+    #[test]
+    fn this_test_will_fail() {
+        let value = prints_and_returns_10(8);
+        assert_eq!(5, value);
+    }
+}\end{lstlisting}}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Showing Function Output(3/5)}
+ \begin{itemize}
+  \item テスト結果 (何もつけない)
+	\begin{itemize}
+	 \item passしたテストの出力は表示されない
+	\end{itemize}
+ \end{itemize}
+\begin{commandline}
+running 2 tests
+test tests::this_test_will_pass ... ok
+test tests::this_test_will_fail ... FAILED
+
+failures:
+
+---- tests::this_test_will_fail stdout ----
+I got the value 8
+thread 'tests::this_test_will_fail' panicked at 'assertion failed: `(left == right)`
+  left: `5`,
+ right: `10`', src/lib.rs:20:9
+note: Run with `RUST_BACKTRACE=1` for a backtrace.
+
+
+failures:
+    tests::this_test_will_fail
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out
+\end{commandline}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Showing Function Output(4/5)}
+ \begin{itemize}
+  \item \verb|cargo test -- --nocapture| で実行
+	\begin{itemize}
+	 \item 成功時の表示も出力される
+	 \item テスト出力とテストの結果がインタリーブされてしまう
+	       ← 並列実行するため
+	\end{itemize}
+ \end{itemize}
+\begin{commandline}
+running 2 tests
+I got the value 8
+thread 'I got the value 4
+tests::this_test_will_fail' panicked at 'assertion failed: `(left == right)`
+  left: `5`,
+ right: `10`', src/lib.rs:20:9
+note: Run with `RUST_BACKTRACE=1` environment variable to display a backtrace.
+test tests::this_test_will_pass ... ok
+test tests::this_test_will_fail ... FAILED
+
+failures:
+
+failures:
+    tests::this_test_will_fail
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out
+\end{commandline}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Showing Function Output(5/5)}
+ \begin{itemize}
+  \item \verb|cargo test -- --test-threads=1| \verb|--nocapture| で実行
+ \end{itemize}
+\begin{commandline}
+running 2 tests
+test tests::this_test_will_fail ... I got the value 8
+thread 'main' panicked at 'assertion failed: `(left == right)`
+  left: `5`,
+ right: `10`', src/lib.rs:20:9
+note: Run with `RUST_BACKTRACE=1` environment variable to display a backtrace.
+FAILED
+test tests::this_test_will_pass ... I got the value 4
+ok
+
+failures:
+
+failures:
+    tests::this_test_will_fail
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out
+\end{commandline}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Running a Subset of Tests (1/5)}
+ \begin{itemize}
+  \item 全てのtest suiteを実行すると長時間かかる場合がある
+  \item \verb|cargo test| に実行したいテスト名を引数として与えられる
+  \item 例として \verb|add_two()| 関数のテストを3つ書く
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Running a Subset of Tests (2/5)}
+ \begin{itemize}
+  \item \href{https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=6cfe8450229fce550312fdbbf3666b47}
+	{(Playground)}
+ \end{itemize}
+ {\scriptsize
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn add_two_and_two() {
+        assert_eq!(4, add_two(2));
+    }
+
+    #[test]
+    fn add_three_and_two() {
+        assert_eq!(5, add_two(3));
+    }
+
+    #[test]
+    fn one_hundred() {
+        assert_eq!(102, add_two(100));
+    }
+}
+\end{lstlisting}}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Running a Subset of Tests (3/5)}
+\begin{itemize}
+ \item 普通に \verb|cargo test|
+\end{itemize}
+\begin{commandline}
+running 3 tests
+test tests::add_three_and_two ... ok
+test tests::add_two_and_two ... ok
+test tests::one_hundred ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+\end{commandline}
+\begin{itemize}
+ \item \verb|cargo test one_hundred|
+       \begin{itemize}
+	\item 2つのテストが実行されていない事が表示される
+       \end{itemize}
+\end{itemize}
+\begin{commandline}
+running 1 test
+test tests::one_hundred ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; \
+2 filtered out
+^^^^^^^^^^^^^^
+\end{commandline}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Running a Subset of Tests (4/5)}
+ \begin{itemize}
+  \item \verb|cargo test add|
+	\begin{itemize}
+	 \item テスト名の一部だけ書いてもよく、ヒットしたテストが実行される
+	 \item \verb|one_hundred|テストだけ実行されない
+	 \item テスト名はモジュール名でも指定できる
+	       \begin{itemize}
+		\item \verb|cargo test e|とかでも全部かかる
+	       \end{itemize}
+	\end{itemize}
+ \end{itemize}
+\begin{commandline}
+running 2 tests
+test tests::add_three_and_two ... ok
+test tests::add_two_and_two ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out
+\end{commandline}
+\end{frame}
+
+\begin{frame}[containsverbatim]{Running a Subset of Tests (5/5)}
+ \begin{itemize}
+  \item \verb|ignore attribute|
+	\begin{itemize}
+	 \item \verb|--ignored| オプションを付けたときだけ実行
+	\end{itemize}
+ \end{itemize}
+ {\scriptsize
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+#[test]
+#[ignore]
+fn expensive_test() {
+    // code that takes an hour to run
+}\end{lstlisting}}
+\vspace*{-10pt}
+\begin{commandline}
+% cargo test
+
+running 2 tests
+test expensive_test ... ignored
+test it_works ... ok
+
+test result: ok. 1 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out
+                                     ^^^^^^^^^
+% cargo test -- --ignored
+
+running 1 test
+test expensive_test ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out
+\end{commandline}
+\end{frame}
+
+\end{document}
