@@ -166,7 +166,7 @@
  \end{itemize}
 \end{frame}
 
-\begin{frame}[containsverbatim]{The Anatomy of a Test Function(1/7)}
+\begin{frame}[fragile]{The Anatomy of a Test Function(1/7)}
  \begin{itemize}
   \item ぶっちゃけ、Rustのテストとは\\
 	\texttt{test} attribute をつけた関数のこと
@@ -184,7 +184,7 @@
  \end{itemize}
 \end{frame}
 
-\begin{frame}[containsverbatim]{The Anatomy of a Test Function(2/7)}
+\begin{frame}[fragile]{The Anatomy of a Test Function(2/7)}
  \begin{itemize}
   \item \verb|cargo new adder --lib| する
  \end{itemize}
@@ -209,7 +209,7 @@ mod tests {
  \end{itemize}
 \end{frame}
 
-\begin{frame}[containsverbatim]{The Anatomy of a Test Function(3/7)}
+\begin{frame}[fragile]{The Anatomy of a Test Function(3/7)}
  \mbox{}
  {\scriptsize
  \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
@@ -233,7 +233,7 @@ mod tests {
  \end{itemize}
 \end{frame}
 
-\begin{frame}[containsverbatim]{The Anatomy of a Test Function(4/7)}
+\begin{frame}[fragile]{The Anatomy of a Test Function(4/7)}
  \begin{commandline}
 % cargo test
    Compiling adder v0.1.0 (/home/rare/work/slides/RustBook/samples/adder)
@@ -262,7 +262,7 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
  \end{itemize}
 \end{frame}
 
-\begin{frame}[containsverbatim]{The Anatomy of a Test Function(5/7)}
+\begin{frame}[fragile]{The Anatomy of a Test Function(5/7)}
  \begin{itemize}
   \item \verb|Doc-tests adder| という出力がある
 	\begin{itemize}
@@ -270,11 +270,12 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
 	 \item APIのドキュメントのコーディング例もコンパイル/テスト可能
 	 \item ドキュメントとコードの同期に役立つ!!
 	\end{itemize}
+	\pause
   \item Chapt. 14 ``Documentation Comments'' でやるのでスルーします
  \end{itemize}
 \end{frame}
 
-\begin{frame}[containsverbatim]{The Anatomy of a Test Function(6/7)}
+\begin{frame}[fragile]{The Anatomy of a Test Function(6/7)}
  \begin{itemize}
   \item テストの名前を変更
 	\begin{itemize}
@@ -290,7 +291,7 @@ test tests::exploration ... ok
  \end{commandline}
 \end{frame}
 
-\begin{frame}[containsverbatim]{The Anatomy of a Test Function(7/7)}
+\begin{frame}[fragile]{The Anatomy of a Test Function(7/7)}
  \begin{itemize}
   \item 失敗するテストを入れてみる
 	\begin{itemize}
@@ -322,7 +323,7 @@ failures:
  \end{commandline}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Checking Results with the assert! (1/5)}
+\begin{frame}[fragile]{Checking Results with the assert! (1/5)}
  \begin{itemize}
   \item \verb|assert!| マクロ
 	\begin{itemize}
@@ -351,7 +352,7 @@ impl Rectangle {
 
 \end{frame}
 
-\begin{frame}[containsverbatim]{Checking Results with the assert! (2/5)}
+\begin{frame}[fragile]{Checking Results with the assert! (2/5)}
 \mbox{}
  {\scriptsize
  \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
@@ -378,7 +379,7 @@ impl Rectangle {
  \end{itemize}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Checking Results with the assert! (3/5)}
+\begin{frame}[fragile]{Checking Results with the assert! (3/5)}
  \begin{itemize}
   \item \verb|larger_can_hold_smaller()| テスト
 	\begin{itemize}
@@ -406,7 +407,7 @@ test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
  \end{itemize}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Checking Results with the assert! (4/5)}
+\begin{frame}[fragile]{Checking Results with the assert! (4/5)}
  \begin{itemize}
   \item \verb|smaller_cannot_hold_larger()| テスト
 	\begin{itemize}
@@ -435,7 +436,7 @@ test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
  \end{itemize}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Checking Results with the assert! (5/5)}
+\begin{frame}[fragile]{Checking Results with the assert! (5/5)}
  \begin{itemize}
   \item バグを仕込んでみる
 	\begin{itemize}
@@ -467,7 +468,7 @@ note: Run with `RUST_BACKTRACE=1` for a backtrace.
 \end{commandline}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Testing Equality with the assert\_eq! (1/4)}
+\begin{frame}[fragile]{Testing Equality with the assert\_eq! (1/4)}
  \begin{itemize}
   \item テストの一般的な方法は期待値と結果の比較
 	\begin{itemize}
@@ -478,7 +479,7 @@ note: Run with `RUST_BACKTRACE=1` for a backtrace.
  \end{itemize}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Testing Equality with the assert\_eq! (2/4)}
+\begin{frame}[fragile]{Testing Equality with the assert\_eq! (2/4)}
  \begin{itemize}
   \item \verb|add_two()| による例:
 	\href{https://play.integer32.com/?version=stable&mode=debug&edition=2018&gist=3e41a536cc2029885d833562d24c9a30}
@@ -505,7 +506,7 @@ test tests::it_adds_two ... ok
 \end{commandline}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Testing Equality with the assert\_eq! (3/4)}
+\begin{frame}[fragile]{Testing Equality with the assert\_eq! (3/4)}
  \begin{itemize}
   \item 失敗するようにする
 	\href{https://play.integer32.com/?version=stable&mode=debug&edition=2018&gist=dfd0a140bf3dcd3168db3debdf3e064b}
@@ -534,7 +535,7 @@ thread 'tests::it_adds_two' panicked at 'assertion failed: `(left == right)`
 \end{itemize}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Testing Equality with the assert\_eq! (4/4)}
+\begin{frame}[fragile]{Testing Equality with the assert\_eq! (4/4)}
  \begin{itemize}
   \item \verb|assert_ne!|マクロもある
 	\begin{itemize}
@@ -556,7 +557,7 @@ thread 'tests::it_adds_two' panicked at 'assertion failed: `(left == right)`
  \end{itemize}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Adding Custom Failure Messages(1/5)}
+\begin{frame}[fragile]{Adding Custom Failure Messages(1/5)}
  \begin{itemize}
   \item 失敗時のメッセージを追加できる
 	\begin{itemize}
@@ -567,7 +568,7 @@ thread 'tests::it_adds_two' panicked at 'assertion failed: `(left == right)`
  \end{itemize}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Adding Custom Failure Messages(2/5)}
+\begin{frame}[fragile]{Adding Custom Failure Messages(2/5)}
  \begin{itemize}
   \item greet関数による例
 	\begin{itemize}
@@ -597,7 +598,7 @@ mod tests {
  \end{itemize}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Adding Custom Failure Messages(3/5)}
+\begin{frame}[fragile]{Adding Custom Failure Messages(3/5)}
  \begin{itemize}
   \item 当然、テストは通る
  \end{itemize}
@@ -622,7 +623,7 @@ pub fn greeting(_name: &str) -> String {
 \end{lstlisting}}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Adding Custom Failure Messages(4/5)}
+\begin{frame}[fragile]{Adding Custom Failure Messages(4/5)}
  \begin{itemize}
   \item 壊れました
  \end{itemize}
@@ -646,7 +647,7 @@ note: Run with `RUST_BACKTRACE=1` for a backtrace.
 \end{itemize}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Adding Custom Failure Messages(5/5)}
+\begin{frame}[fragile]{Adding Custom Failure Messages(5/5)}
  \begin{itemize}
   \item テストを変更する
 	\begin{itemize}
@@ -674,7 +675,7 @@ note: Run with `RUST_BACKTRACE=1` for a backtrace.
  \end{commandline}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Panic with \texttt{should\_panic} (1/8)}
+\begin{frame}[fragile]{Panic with \texttt{should\_panic} (1/8)}
  \begin{itemize}
   \item 結果が正しいかのチェックだけでなく、
 	エラー条件についてのチェックも重要
@@ -700,7 +701,7 @@ impl Guess {
 }\end{lstlisting}}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Panic with \texttt{should\_panic} (2/8)}
+\begin{frame}[fragile]{Panic with \texttt{should\_panic} (2/8)}
  \begin{itemize}
   \item 範囲外の値を入れてpanicさせるテストを書く
 	\begin{itemize}
@@ -732,7 +733,7 @@ test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
 \end{commandline}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Panic with \texttt{should\_panic} (3/8)}
+\begin{frame}[fragile]{Panic with \texttt{should\_panic} (3/8)}
  \begin{itemize}
   \item バグを仕込みましょう
 	\begin{itemize}
@@ -761,7 +762,7 @@ test tests::greater_than_100 ... FAILED
 \end{commandline}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Panic with \texttt{should\_panic} (4/8)}
+\begin{frame}[fragile]{Panic with \texttt{should\_panic} (4/8)}
  \begin{commandline}
 running 1 test
 test tests::greater_than_100 ... FAILED
@@ -777,7 +778,7 @@ test tests::greater_than_100 ... FAILED
 \end{itemize}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Panic with \texttt{should\_panic} (5/8)}
+\begin{frame}[fragile]{Panic with \texttt{should\_panic} (5/8)}
  \begin{itemize}
   \item \verb|new()|メソッドを変更
 	\begin{itemize}
@@ -798,7 +799,7 @@ pub fn new(value: i32) -> Guess {
 }\end{lstlisting}}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Panic with \texttt{should\_panic} (6/8)}
+\begin{frame}[fragile]{Panic with \texttt{should\_panic} (6/8)}
  \begin{itemize}
   \item \verb|should_panic| に \verb|expected| パラメータ
 	\begin{itemize}
@@ -826,7 +827,7 @@ test tests::greater_than_100 ... ok
 \end{commandline}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Panic with \texttt{should\_panic} (7/8)}
+\begin{frame}[fragile]{Panic with \texttt{should\_panic} (7/8)}
  \begin{itemize}
   \item バグを仕込む
 	\begin{itemize}
@@ -846,7 +847,7 @@ if value < 1 {
 }\end{lstlisting}}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Panic with \texttt{should\_panic} (8/8)}
+\begin{frame}[fragile]{Panic with \texttt{should\_panic} (8/8)}
 \begin{itemize}
  \item 無事失敗する
        \begin{itemize}
@@ -866,7 +867,7 @@ note: Panic did not include expected string \
 \end{commandline}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Using \texttt{Result<T,E>} (1/3)}
+\begin{frame}[fragile]{Using \texttt{Result<T,E>} (1/3)}
  \begin{itemize}
   \item ここまで、テストに \verb|panic!| を使ってきた
   \item テストには \verb|Result<T, E>| も使える
@@ -892,7 +893,7 @@ mod tests {
 }\end{lstlisting}}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Using \texttt{Result<T,E>} (2/3)}
+\begin{frame}[fragile]{Using \texttt{Result<T,E>} (2/3)}
  \begin{itemize}
   \item 出力
  \end{itemize}
@@ -922,14 +923,14 @@ with a non-zero status code (1) which indicates a failure', src/libtest/lib.rs:3
 \end{commandline}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Using \texttt{Result<T,E>} (3/3)}
+\begin{frame}[fragile]{Using \texttt{Result<T,E>} (3/3)}
  \begin{itemize}
   \item この方法を使う場合 \verb|#[should_panic]| は使えない
   \item 替わりに \verb|Err| を返すようにしましょう
  \end{itemize}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Controlling How Tests Are Run (1/2)}
+\begin{frame}[fragile]{Controlling How Tests Are Run (1/2)}
  \begin{itemize}
   \item \verb|cargo test| コマンド
 	\begin{itemize}
@@ -947,7 +948,7 @@ with a non-zero status code (1) which indicates a failure', src/libtest/lib.rs:3
  \end{itemize}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Controlling How Tests Are Run (2/2)}
+\begin{frame}[fragile]{Controlling How Tests Are Run (2/2)}
 \vspace*{-10pt}
 \begin{commandline}
 % cargo test --help | head
@@ -978,7 +979,7 @@ Options:
 \end{commandline}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Running Tests in Parallel or Conse...(1/2)}
+\begin{frame}[fragile]{Running Tests in Parallel or Conse...(1/2)}
  \begin{itemize}
   \item デフォルトでは複数のテストをスレッドで並列実行する
 	\begin{itemize}
@@ -998,7 +999,7 @@ Options:
  \end{itemize}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Running Tests in Parallel or Conse...(2/2)}
+\begin{frame}[fragile]{Running Tests in Parallel or Conse...(2/2)}
  \begin{itemize}
   \item \verb|--test-threads|
 	\begin{itemize}
@@ -1011,7 +1012,7 @@ Options:
 \end{commandline}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Showing Function Output(1/5)}
+\begin{frame}[fragile]{Showing Function Output(1/5)}
 \begin{itemize}
  \item デフォルトではテストがpassした場合標準出力は捨てられる
  \item \verb|println!()| を使った関数での例
@@ -1024,7 +1025,7 @@ fn prints_and_returns_10(a: i32) -> i32 {
 }\end{lstlisting}}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Showing Function Output(2/5)}
+\begin{frame}[fragile]{Showing Function Output(2/5)}
 \begin{itemize}
  \item テストコード
        \begin{itemize}
@@ -1052,7 +1053,7 @@ mod tests {
 }\end{lstlisting}}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Showing Function Output(3/5)}
+\begin{frame}[fragile]{Showing Function Output(3/5)}
  \begin{itemize}
   \item テスト結果 (何もつけない)
 	\begin{itemize}
@@ -1081,7 +1082,7 @@ test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out
 \end{commandline}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Showing Function Output(4/5)}
+\begin{frame}[fragile]{Showing Function Output(4/5)}
  \begin{itemize}
   \item \verb|cargo test -- --nocapture| で実行
 	\begin{itemize}
@@ -1110,7 +1111,7 @@ test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out
 \end{commandline}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Showing Function Output(5/5)}
+\begin{frame}[fragile]{Showing Function Output(5/5)}
  \begin{itemize}
   \item \verb|cargo test -- --test-threads=1| \verb|--nocapture| で実行
  \end{itemize}
@@ -1134,7 +1135,7 @@ test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out
 \end{commandline}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Running a Subset of Tests (1/5)}
+\begin{frame}[fragile]{Running a Subset of Tests (1/5)}
  \begin{itemize}
   \item 全てのtest suiteを実行すると長時間かかる場合がある
   \item \verb|cargo test| に実行したいテスト名を引数として与えられる
@@ -1142,7 +1143,7 @@ test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out
  \end{itemize}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Running a Subset of Tests (2/5)}
+\begin{frame}[fragile]{Running a Subset of Tests (2/5)}
  \begin{itemize}
   \item \href{https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=6cfe8450229fce550312fdbbf3666b47}
 	{(Playground)}
@@ -1171,7 +1172,7 @@ mod tests {
 \end{lstlisting}}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Running a Subset of Tests (3/5)}
+\begin{frame}[fragile]{Running a Subset of Tests (3/5)}
 \begin{itemize}
  \item 普通に \verb|cargo test|
 \end{itemize}
@@ -1199,7 +1200,7 @@ test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; \
 \end{commandline}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Running a Subset of Tests (4/5)}
+\begin{frame}[fragile]{Running a Subset of Tests (4/5)}
  \begin{itemize}
   \item \verb|cargo test add|
 	\begin{itemize}
@@ -1220,7 +1221,7 @@ test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out
 \end{commandline}
 \end{frame}
 
-\begin{frame}[containsverbatim]{Running a Subset of Tests (5/5)}
+\begin{frame}[fragile]{Running a Subset of Tests (5/5)}
  \begin{itemize}
   \item \verb|ignore attribute|
 	\begin{itemize}
@@ -1251,6 +1252,418 @@ test expensive_test ... ok
 
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out
 \end{commandline}
+\end{frame}
+
+\begin{frame}[fragile]{Test Organization}
+ \begin{itemize}
+  \item テストは複雑
+	\begin{itemize}
+	 \item 人によって用語や構成が異なる
+	\end{itemize}
+  \item Rustコミュニティーで二つのカテゴリの面で
+	テストを考える
+  \item unit test
+	\begin{itemize}
+	 \item 小さい単位(モジュールとか)でフォーカスして
+	 \item プライベートなインターフェースもテスト
+	\end{itemize}
+  \item integration test
+	\begin{itemize}
+	 \item 外部のコードがライブラリを使うようにテスト
+	 \item 公開インターフェースのみを他のモジュールと一緒に実行してテスト
+	\end{itemize}
+  \item テストを書くことは、ライブラリの断片が、別々に、一緒に、
+	期待通りに動くことを確認するために重要である
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Unit Tests (1/5)}
+ \begin{itemize}
+  \item unit testの目的
+	\begin{itemize}
+	 \item コードの各単位が他のコードから分離できているか
+	 \item どの部分が正しく動いて、どの部分が正しく動いていないか
+	\end{itemize}
+  \item 慣習的には
+	\begin{itemize}
+	 \item src以下の各ファイルで \texttt{tests} という名前のモジュールを作成
+	 \item testsモジュールはテスト関数を持ち、 \verb|cfg(test)| で
+	       アノテートされる
+	\end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Unit Tests (2/5)}
+ \begin{itemize}
+  \item \verb|#[cfg(test)]|
+	\begin{itemize}
+	 \item コンパイラに \verb|cargo test| でのみビルドするよう教える
+	 \item コンパイル時間やファイルサイズを抑える
+	 \item 後でやるintegration testはsrcに置かないし、
+	       \verb|#[cfg(test)]|も付けない
+	 \item \verb|cargo new --lib| で生成されるコードにも付いてる
+	       \href{https://play.integer32.com/?version=stable&mode=debug&edition=2018&gist=ce8ee04d2dcc2311a14efc8090ebda51}
+	       {(Playground)}
+	 \item モジュール中のヘルパー関数にも適用される
+	\end{itemize}
+ \end{itemize}
+ {\scriptsize
+ \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn it_works() {
+        assert_eq!(2 + 2, 4);
+    }
+}\end{lstlisting}}
+\end{frame}
+
+\begin{frame}[fragile]{Unit Tests (3/5)}
+ \begin{itemize}
+  \item プライベート関数を直接テストするか否か
+	\begin{itemize}
+	 \item 議論されている
+	 \item 他の言語だと、難しかったり、不可能だったり
+	 \item Rustのprivacy ruleならできてしまう
+	\end{itemize}
+  \item プライベート関数 \verb|internal_adder()| で考える
+ \end{itemize}
+ {\scriptsize
+ \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+pub fn add_two(a: i32) -> i32 {
+    internal_adder(a, 2)
+}
+
+fn internal_adder(a: i32, b: i32) -> i32 {
+    a + b
+}\end{lstlisting}}
+\end{frame}
+
+\begin{frame}[fragile]{Unit Tests (4/5)}
+ \begin{itemize}
+  \item テスト本体
+	\begin{itemize}
+	 \item \verb|internal_addr()|を直接コール
+	 \item \href{https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=0d970a840ec7a82730e9a9d71d142e14}
+	       {(Playground)}
+	\end{itemize}
+ \end{itemize}
+ {\scriptsize
+ \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn internal() {
+        assert_eq!(4, internal_adder(2, 2));
+    }
+}\end{lstlisting}}
+\end{frame}
+
+\begin{frame}[fragile]{Unit Tests (5/5)}
+ \begin{itemize}
+  \item \verb|internal_addr()| は \verb|pub| が付いていない
+	\begin{itemize}
+	 \item \verb|tests| は単に別のモジュールであるので
+	       \verb|internal_addr()| を \verb|tests| のスコープに持っていける
+	\end{itemize}
+ \end{itemize}
+\begin{commandline}
+running 1 test
+test tests::internal ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+\end{commandline}
+\begin{itemize}
+  \item プライベート関数はテストしないべき派の方にも
+	特に何も強いません
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Integration Tests (1/11)}
+ \begin{itemize}
+  \item ライブラリの公開APIを他のコードが使うのと同じようにテストする
+	\begin{itemize}
+	 \item 目的はライブラリのパーツが、一緒に正しく動くかをテストすること
+	 \item 単体では動作するけどintegrateされると問題を起こすことはままある
+	 \item integrateされたコードのtest coverageは重要
+	\end{itemize}
+  \item integration testのためには、まず \texttt{tests} ディレクトリを作る
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Integration Tests (2/11)}
+ \begin{itemize}
+  \item \texttt{tests}ディレクトリ
+	\begin{itemize}
+	 \item プロジェクトの一番上のレベルに作る (\texttt{src}と同じ階層)
+	 \item \texttt{cargo} がそこを見て、各ファイルごとにcrateを作る
+	\end{itemize}
+  \item 単体テストの \texttt{src/lib.rs} をちょっと変更して
+	\texttt{tests/integration\_test.rs}にリネーム
+ \end{itemize}
+ {\scriptsize
+ \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+use adder;
+
+#[test]
+fn internal() {
+    assert_eq!(4, internal_adder(2, 2));
+}\end{lstlisting}}
+\end{frame}
+
+\begin{frame}[fragile]{Integration Tests (3/11)}
+ \mbox{}
+ {\scriptsize
+ \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+use adder;
+
+#[test]
+fn internal() {
+    assert_eq!(4, internal_adder(2, 2));
+}\end{lstlisting}}
+\begin{itemize}
+ \item 何が変わった?
+       \begin{itemize}
+	\item \verb|use super::*;| が \verb|use adder;|に
+	      \begin{itemize}
+	       \item testが別crateであるため
+	       \item ライブラリ名は \texttt{adder} にすること(1敗)
+	       \item \texttt{Cargo.toml} の \texttt{name} を書けばOK
+	      \end{itemize}
+	\item \verb|#cfg(test)|がない
+	      \begin{itemize}
+	       \item \texttt{tests}ディレクトリに置いたことで
+		     cargoがそのように扱ってくれる
+	      \end{itemize}
+	      \pause
+	\item Playgroundではできない orz
+       \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Integration Tests (4/11)}
+\begin{commandline}
+% cargo test
+    Finished dev [unoptimized + debuginfo] target(s) in 0.00s
+     Running target/debug/deps/adder-1d0dfd1494bab5c6
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+
+     Running target/debug/deps/integration_test-22e1bbc18e3cf744
+
+running 1 test
+test it_adds_two ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+
+   Doc-tests adder
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+\end{commandline}
+\end{frame}
+
+\begin{frame}[fragile]{Integration Tests (5/11)}
+\begin{itemize}
+ \item 項目が3つ表示される
+       \begin{itemize}
+	\item unit test: さきほどまでの
+	\item integration test
+	\item doc test
+       \end{itemize}
+ \item integration testは\\
+       \texttt{\footnotesize Running target/debug/deps/integration\_test-XXXXXX}\\[6pt]
+       の行から始まっている
+       \begin{itemize}
+	\item その後、各テストの結果が出力され、最後にsummaryが出てくる
+	\item そしてdoc testが続く
+	\item testsディレクトリに入れたファイル毎にセクションができて結果表示される
+       \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Integration Tests (6/11)}
+\begin{itemize}
+ \item \texttt{cargo test}への引数で特定のテストを実行
+       \begin{itemize}
+	\item \verb|--test| オプションを \texttt{cargo} に渡す
+	\item \verb|--test| をつけないと、
+	      unit, integration, docで該当する関数のみ実行しにいく
+       \end{itemize}
+\end{itemize}
+\begin{commandline}
+% cargo test --test integration_test
+    Finished dev [unoptimized + debuginfo] target(s) in 0.00s
+     Running target/debug/deps/integration_test-22e1bbc18e3cf744
+
+running 1 test
+test it_adds_two ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+\end{commandline}
+\end{frame}
+
+\begin{frame}[fragile]{Integration Tests (7/11)}
+\begin{itemize}
+ \item テスト機能ごとにファイルを分けたい場合
+       \begin{itemize}
+	\item \texttt{tests}ディレクトリの各ファイルは
+	      それぞれ別のcrateとしてコンパイルされる
+       \end{itemize}
+ \item 別のcrateとして扱うことについて
+       \begin{itemize}
+	\item ユーザーが実際にcrateを使う場合に近い状態になるので良い
+	\item \texttt{src} 以下のファイルとは振舞いを共有できない
+	\item ヘルパー関数はChapt. 7で行なったように
+	      共有モジュールとしてextractすればよい
+       \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Integration Tests (8/11)}
+ \begin{itemize}
+  \item 共有モジュール化の例
+	\begin{itemize}
+	 \item \verb|tests/common.rs| をつくる
+	 \item \verb|#[test]| をつけた関数がないので
+	       \verb|setup()| は実行されない
+	\end{itemize}
+ \end{itemize}
+\vspace*{-2pt}
+ {\scriptsize
+ \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+pub fn setup() {
+    // setup code specific to your library's tests would go here
+}\end{lstlisting}}
+\vspace*{-10pt}
+\begin{commandline}
+% cargo test
+   Compiling adder v0.1.0 (/home/rare/work/slides/RustBook/samples/integration_test2)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.52s
+     Running target/debug/deps/adder-1d0dfd1494bab5c6
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+
+     Running target/debug/deps/common-9c75c5df2f50cca9
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+\end{commandline}
+\end{frame}
+
+\begin{frame}[fragile]{Integration Tests (9/11)}
+ \begin{itemize}
+  \item テストの結果表示には出てきてほしくない
+	\begin{itemize}
+	 \item 慣習的な方法としては
+	       \verb|tests/common.rs| $\Rightarrow$ \verb|tests/common/mod.rs|
+	       とする
+	 \item \texttt{tests}ディレクトリのサブディレクトリは
+	       コンパイルされない(\verb|cargo build|のはなし?)し、テスト結果にも表示されない
+	\end{itemize}
+ \end{itemize}
+ \vspace*{-7pt}
+\begin{commandline}
+% cargo test
+Finished dev [unoptimized + debuginfo] target(s) in 0.01s
+Running target/debug/deps/adder-1d0dfd1494bab5c6
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+
+Running target/debug/deps/integration_test-22e1bbc18e3cf744
+
+running 1 test
+test it_adds_two ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+\end{commandline}
+\end{frame}
+
+\begin{frame}[fragile]{Integration Tests (10/11)}
+\begin{itemize}
+ \item \verb|setup()| を使うには?
+       \begin{itemize}
+	\item 以下のようにモジュールとして使えばよい
+	\item \verb|mod common;| は Chapt. 7のときと同じ
+	\item \verb|common::setup()| でコールできるようになる
+       \end{itemize}
+\end{itemize}
+{\scriptsize
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+use adder;
+
+mod common;
+
+#[test]
+fn it_adds_two() {
+    common::setup();
+    assert_eq!(4, adder::add_two(2));
+}\end{lstlisting}}
+\end{frame}
+
+\begin{frame}[fragile]{Integration Tests (11/11)}
+\begin{itemize}
+ \item \verb|src/main.rs|だけあって\verb|src/libs.rs|が無いbinary crateのテストは?
+       \begin{itemize}
+	\item \texttt{tests}ディレクトリにintegration testは作れない
+	\item \verb|use| をつかって \verb|src/main.rs| で定義されている
+	      関数をスコープに持ってこられない
+	\item library crateしか他のcrateからは使えない
+       \end{itemize}
+ \item Rustのプロジェクトでは
+       \begin{itemize}
+	\item \verb|src/main.rs| からは \verb|src/lib.rs| にある
+	      ロジックを単にコールするだけにする
+	\item この構成だと重要な機能は \verb|use| で
+	      integration testすることができる
+	\item \verb|src/main.rs| はライブラリ部分が正しく動けば
+	      動くような小さいコードにしておく
+       \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Summary (1/2)}
+ \begin{itemize}
+  \item Rustのtest feature
+	\begin{itemize}
+	 \item 期待通りにコードが動作しつづけるために
+	       どう機能するべきかを指定する方法を提供
+	\end{itemize}
+  \item unit test
+	\begin{itemize}
+	 \item ライブラリの各パーツを別々にテストできる
+	 \item privateな実装のテストができる
+	\end{itemize}
+  \item integration test
+	\begin{itemize}
+	 \item ライブラリの多くのパーツが一緒に正しく動くかテストできる
+	 \item ライブラリの公開APIを実際に使われるのと同じ方法でテストできる
+	\end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}{Summary (2/2)}
+\begin{itemize}
+ \item Rustの型システムやownershipルールは
+       いくつかのタイプのバグを防ぐのに役立つ
+ \item テストは、期待する振舞いに関連するロジックのバグの
+       削減のために依然重要である
+\end{itemize}
+\pause
+\begin{center}
+さぁ、このChapterで学んだ内容を\\
+これまでのChapterのprojectsに組み込もう!!
+\end{center}
 \end{frame}
 
 \end{document}
