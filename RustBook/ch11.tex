@@ -60,7 +60,7 @@
 	 \item 不幸にも最近C++の本を読まされています\\
 	       タスケテ
 	\end{itemize}
-  \item 社風:「テスト? なにそれ食べられるの?」
+  \item 社風:「テスト?」
   \item 「世間一般ではこんな感じ」的なツッコミ歓迎
  \end{itemize}
 \end{frame}
@@ -120,7 +120,7 @@
  \begin{itemize}
   \item テストの方法の例
 	\begin{itemize}
-	 \item $3$ を与えたら $5$ を返すとassertをする
+	 \item $3$ を与えたら $5$ を返すとassertする
 	 \item このテストを、コードの変更の度に行なう
 	 \item 正しい挙動をしている事を確認
 	\end{itemize}
@@ -132,7 +132,7 @@
   \item テストは難しいので
 	\begin{itemize}
 	 \item 良いテストの詳細についてはカバーしない
-	 \item Rustののテストのための機能について議論する
+	 \item Rustのテストのための機能について議論する
 	\end{itemize}
   \item 取り扱う内容
 	\begin{itemize}
@@ -224,7 +224,8 @@ mod tests {
   \item \verb|#[test]|
 	\begin{itemize}
 	 \item テスト関数を示す
-	 \item 共通処理等を書く非テスト関数も書けるように
+	 \item 共通処理等を書く非テスト関数も
+	       同じモジュール内に書けるようになっている
 	\end{itemize}
   \item \verb|assert_eq!(2 + 2, 4)|
 	\begin{itemize}
@@ -255,7 +256,7 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
   \item \href{https://play.integer32.com/?version=stable&mode=debug&edition=2018&gist=ce8ee04d2dcc2311a14efc8090ebda51}
 	{Playground} でもテストできる……
   \item ignored, filteredについては次節で説明
-  \item measuredについては現在はnightlyだけの機能
+  \item measuredについては現在はnightlyだけ
 	\begin{itemize}
 	 \item ベンチマークテスト用
 	\end{itemize}
@@ -403,7 +404,7 @@ test tests::larger_can_hold_smaller ... ok
 test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
  \end{commandline}
  \begin{itemize}
-  \item \verb|can_hold(0)| は \texttt{true} を返すのでpassする
+  \item \verb|can_hold()| は \texttt{true} を返すのでpassする
  \end{itemize}
 \end{frame}
 
@@ -432,7 +433,7 @@ test tests::smaller_cannot_hold_larger ... ok
 test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
  \end{commandline}
  \begin{itemize}
-  \item \verb|smaller_cannot_hold_larger()| が \verb|false| を返すのでpassする
+  \item \verb|can_hold()| が \verb|false| を返すのでpassする
  \end{itemize}
 \end{frame}
 
@@ -474,7 +475,9 @@ note: Run with `RUST_BACKTRACE=1` for a backtrace.
 	\begin{itemize}
 	 \item \verb|assert!| マクロに $==$ を渡してもよい
 	 \item \verb|assert_eq!|,  \verb|assert_ne!| マクロもある
-	 \item これらは期待値と結果の両方を表示してくれる
+	       \begin{itemize}
+		\item これらは期待値と結果の両方を表示してくれる
+	       \end{itemize}
 	\end{itemize}
  \end{itemize}
 \end{frame}
@@ -746,7 +749,8 @@ test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
 impl Guess {
     pub fn new(value: i32) -> Guess {
         if value < 1 /* 100より大きい条件を消す */ {
-            panic!("Guess value must be between 1 and 100, got {}.", value);
+            panic!("Guess value must be between 1 and 100, got {}.",
+                   value);
         }
         Guess {
             value
@@ -908,7 +912,7 @@ test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
        \begin{itemize}
 	\item \verb|assert_eq!| みたいな出力だが
 	      \begin{itemize}
-	       \item 左辺はエラー結果(非0)の値を意味している模様
+	       \item 左辺はテストバイナリの結果(非0)の値を意味している模様
 	       \item 右辺は成功時の結果(0)
 	      \end{itemize}
        \end{itemize}
@@ -1409,7 +1413,7 @@ use adder;
 
 #[test]
 fn internal() {
-    assert_eq!(4, internal_adder(2, 2));
+    assert_eq!(4, adder::add_two(2));
 }\end{lstlisting}}
 \end{frame}
 
@@ -1421,7 +1425,7 @@ use adder;
 
 #[test]
 fn internal() {
-    assert_eq!(4, internal_adder(2, 2));
+    assert_eq!(4, adder::add_two(2));
 }\end{lstlisting}}
 \begin{itemize}
  \item 何が変わった?
@@ -1438,7 +1442,7 @@ fn internal() {
 		     cargoがそのように扱ってくれる
 	      \end{itemize}
 	      \pause
-	\item Playgroundではできない orz
+	\item Playgroundではどうしようもない orz
        \end{itemize}
 \end{itemize}
 \end{frame}
