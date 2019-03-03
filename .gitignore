@@ -9,3 +9,4 @@
 *.dvi
 *.aux
 texput.*
+*.vrb

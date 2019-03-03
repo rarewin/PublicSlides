@@ -1,0 +1,242 @@
+\documentclass[cjk,dvipdfmx,10pt,compress,%
+hyperref={bookmarks=true,bookmarksnumbered=true,bookmarksopen=false,%
+colorlinks=false,%
+pdftitle={第 132 回 関西 Debian 勉強会},%
+pdfauthor={小林},%
+%pdfinstitute={関西 Debian 勉強会},%
+pdfsubject={資料},%
+}]{beamer}
+
+\title{技術系Podcastのススメ}
+\subtitle{@OSS 系コミュニティ合同 LT 大会 in 関西}
+\author[Katsuki Kobayashi]{{\large\bf Katsuki Kobayashi}}
+\institute[Debian JP]{{\normalsize\tt OSS 系コミュニティ合同 LT 大会 in 関西\\ (関西 Debian 勉強会 共催)}}
+\date{{\small 2019年 1月 27日}}
+
+%\usepackage{amsmath}
+%\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{moreverb}
+\usepackage[varg]{txfonts}
+\AtBeginDvi{\special{pdf:tounicode EUC-UCS2}}
+\usetheme{KansaiDebian}
+\def\museincludegraphics{%
+  \begingroup
+  \catcode`\|=0
+  \catcode`\\=12
+  \catcode`\#=12
+  \includegraphics[width=0.9\textwidth]}
+%\renewcommand{\familydefault}{\sfdefault}
+%\renewcommand{\kanjifamilydefault}{\sfdefault}
+\begin{document}
+%\settitleslide
+\begin{frame}
+\titlepage
+\end{frame}
+%\setdefaultslide
+
+\begin{frame}[fragile]
+  \frametitle{自己紹介}
+  \begin{itemize}
+   \item 小林といいます
+   \item 関西Debian勉強会勢
+   \item 職業組み込みプログラマ
+	\begin{itemize}
+	 \item itron、C言語、ARMアセンブラ
+	 \item 最近ではYocto LinuxだとかC++とか……(ツライ)
+	\end{itemize}
+	\pause
+   \item 今朝思いついたネタなので、つまらなかったらゴメンナサイ
+	 \pause
+   \item スライドはDebianですがDebian要素はありません
+  \end{itemize}
+\end{frame}
+
+%\begin{frame}[fragile]
+%\frametitle{Agenda}
+%
+%\tableofcontents
+%
+%\end{frame}
+%
+%\section{最近の Debian 関係のイベント}
+%\takahashi[40]{最近の Debian\\関係のイベント}
+
+\takahashi[40]{技術系Podcast\\聞いてますか?}
+
+\begin{frame}[fragile]
+  \frametitle{技術系Podcast聞いてますか?}
+  \begin{itemize}
+   \item Rebuild.fmというPodcastを何年か前から聞いてます
+	 \begin{itemize}
+	  \item Tatsuhiko Miyagawaさんホスト
+	  \item \url{http://rebuild.fm/}
+	  \item 現在207エピソード!
+	  \item 毎回ゲストが変わる感じで内容も多岐に渡るがウェブ系の話多め
+	 \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{個人的おすすめPodcast}
+  \begin{itemize}
+   \item Turing Complete FM \url{https://turingcomplete.fm/}
+	 \begin{itemize}
+	  \item Rui Ueyamaさんホスト
+	  \item 毎回ゲストが変わる感じだけど内容は低レイヤーの濃ゆい話が主
+	  \item だいたいのゲストがコンパイラとかOSを書いたことがある
+		\begin{itemize}
+		 \item 特定の層しか共感できない話題が多数!!
+		\end{itemize}
+	 \end{itemize}
+   \item Misreading Chat \url{https://misreading.chat/}
+	 \begin{itemize}
+	  \item Hajime MoritaさんとJun Mukaiさんがホスト
+	  \item Computer Scienceの論文の紹介
+		\begin{itemize}
+		 \item かなり多岐に渡る論文が紹介されます
+		 \item お二人とも賢いので、自分の分野以外は聞いても大体わからない
+		\end{itemize}
+	  \item 個人的に森田さんのディスリ方がツボ
+	 \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\takahashi[40]{本日の主旨は\\ Podcastの紹介\\ \mbox{}\\ \mbox{\small \mbox{}}}
+\takahashi[40]{本日の主旨は\\ Podcastの紹介\\ \alert{\bf ではありません}\\ \mbox{\small \mbox{}}}
+\takahashi[40]{本日の主旨は\\ Podcastの紹介\\ \alert{\bf ではありません}\\
+ \mbox{\small Qiitaで紹介記事とかありますのでそちらを}}
+
+\begin{frame}[fragile]
+  \frametitle{本日の主旨}
+  \begin{itemize}
+   \item みなさんの沼案件Podcastとか炎上案件Podcastが配信できるよう\\
+	 \alert{配信方法} についてしゃべります
+   \item 実は関東の友人とPodcastの配信をしていて、わりと簡単にできます
+	 \begin{itemize}
+	  \item Skypeで会話
+	  \item 互いの声を録音してミックス
+	  \item RSSフィード
+	 \end{itemize}
+	 \pause
+   \item ちなみに配信されてる方とかいます?
+	 \pause
+	 \begin{itemize}
+	  \item Podcast名だけ教えてトイレ休憩でお願いします。
+	 \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+ \frametitle{必要なもの (1/2)}
+ \begin{itemize}
+  \pause
+  \item PC \pause
+  \item マイク \pause
+  \item 編集ソフト \pause
+  \item 配信サーバー \pause
+  \item 以上!!
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+ \frametitle{必要なもの (2/2)}
+ \begin{itemize}
+  \item マイクはそれなりにちゃんとしたのを買ったほうが良い
+	\begin{itemize}
+	 \item Rebuild.fmの宮川さんがマイクの紹介してます
+	 \item \url{https://weblog.bulknews.net/podcasting-guide-2017-2e88531a367d}
+	\end{itemize}
+  \item 編集ソフトは、ひとまずAudacityでおk
+	\begin{itemize}
+	 \item \url{https://www.audacityteam.org/}
+	\end{itemize}
+  \item 配信サーバーは「さくらのレンタルサーバー」をつかいましょう
+	\begin{itemize}
+	 \item \url{https://www.sakura.ne.jp/}
+	\end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+ \frametitle{なにはともあれ収録}
+ \begin{itemize}
+  \item Skypeで会話しましょう
+	\begin{itemize}
+	 \item Debianでうまくできてない……
+	 \item マイクデバイスをSkypeアプリに握られてしまう
+	\end{itemize}
+  \item Skypeの音声を収録するのではなく、\\
+	各自自分の声だけ録音しておくと吉
+	\begin{itemize}
+	 \item 各自の声の音量調整ができるしノイズが入らない
+	 \item 相手の声は音洩れしないようイヤホンとかで聞きましょう
+	       \begin{itemize}
+		\item マイクが相手の声を拾うと悲惨です
+	       \end{itemize}
+	 \item 音合わせの手段を用意しておくと良いです
+	\end{itemize}
+  \item 油断してると普通に1時間くらいの長さになってしまう
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+ \frametitle{配信方法 (1/2)}
+ \begin{itemize}
+  \item Pythonの静的サイトジェネレータPelicanを使ってます
+	\begin{itemize}
+	 \item 以前Qiitaにまとめていた!!
+	 \item \url{https://qiita.com/rarewin/items/b11a699533b2588e5841}
+	\end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+ \frametitle{配信方法 (2/2)}
+ \begin{itemize}
+  \item iTunes Storeに登録できます
+	\begin{itemize}
+	 \item \url{https://www.apple.com/jp/itunes/podcasts/}
+	 \item 細かい方法は忘れました
+	 \item 審査あり
+	       \begin{itemize}
+		\item 結構長かった記憶
+		\item 「ヘイ！シ○！」とか入っててはいけないらしい?
+	       \end{itemize}
+	\end{itemize}
+  \item ホスティング
+	\begin{itemize}
+	 \item さくらのレンタルサーバーを使用させていただいています
+	 \item .fmドメインはお高いです
+	       \begin{itemize}
+		\item 年額1万越え!!
+		\item 取る必要はないですが、有名なPodcastは取ってる人がおおい
+		\item liveドメインはもうちょっと休め
+	       \end{itemize}
+	\end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{まとめ}
+  \begin{itemize}
+   \item Podcast配信方法をさらっと紹介
+	 \begin{itemize}
+	  \item 意外と簡単にできますよ
+	  \item 複数人でやるとき面倒なのはスケジューリングと編集
+	 \end{itemize}
+   \item 以下を期待しています
+	 \begin{itemize}
+	  \item Sさんの沼案件Podcast
+	  \item 炎上ウォッチャーKさんの炎上Podcast
+	 \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\takahashi[20]{ご清聴ありがとうございました}
+
+\end{document}
+%%% Local Variables:
+%%% mode: japanese-latex
+%%% TeX-master: t
+%%% End:
