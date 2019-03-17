@@ -1,0 +1,296 @@
+\documentclass[cjk,dvipdfmx,10pt,compress,t,fragile%
+hyperref={bookmarks=true,bookmarksnumbered=true,bookmarksopen=false,%
+colorlinks=false,%
+pdftitle={第 134 回 関西 Debian 勉強会},%
+pdfauthor={小林},%
+%pdfinstitute={関西 Debian 勉強会},%
+pdfsubject={資料},%
+}]{beamer}
+
+\title{DebianでRustパッケージング}
+\author[Katsuki Kobayashi]{{\large\bf Katsuki Kobayashi}}
+\institute[Debian JP]{{\normalsize\tt 関西 Debian 勉強会 共催}}
+\date{{\small 2019年 3月 24日 (日)}}
+
+\usepackage{graphicx}
+\usepackage{moreverb}
+\usepackage{ulem}
+\usepackage[varg]{txfonts}
+\usepackage{tabularx}
+\usepackage{fancybox}
+\usepackage{fancyvrb}
+\usepackage{float}
+\usepackage{multicol}
+\usepackage{minijs}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{newtxtext}
+\usepackage{listings, listings-rust}
+\usepackage{hyperref}
+\AtBeginDvi{\special{pdf:tounicode EUC-UCS2}}
+\usetheme{KansaiDebian}
+\def\museincludegraphics{%
+  \begingroup
+  \catcode`\|=0
+  \catcode`\\=12
+  \catcode`\#=12
+  \includegraphics[width=0.9\textwidth]}
+%\renewcommand{\familydefault}{\sfdefault}
+%\renewcommand{\kanjifamilydefault}{\sfdefault}
+%
+\newenvironment{commandline}%
+{\VerbatimEnvironment
+  \begin{Sbox}\begin{minipage}{0.9\hsize}\begin{fontsize}{8}{8} \color{white} \begin{BVerbatim}}%
+{\end{BVerbatim}\end{fontsize}\end{minipage}\end{Sbox}
+  \setlength{\fboxsep}{8pt}
+% start on a new paragraph
+
+\vspace{6pt}% skip before
+\fcolorbox{white}{black}{\TheSbox}
+
+\vspace{3pt}% skip after
+}
+%end of commandline
+
+\begin{document}
+
+\begin{frame}[fragile]
+\titlepage
+\end{frame}
+
+\begin{frame}[fragile]{自己紹介}
+ \begin{itemize}
+  \item Katsuki Kobayashi
+	\begin{itemize}
+	 \item 組み込みエンジニア
+	 \item 使用言語: C, アセンブラ(ARM)
+	 \item \sout{永遠}に勉強中: Python, Kotlin, アセンブラ(RISC-V), Rust
+	       \onslide<2>{\item 最近会社でC++を勉強させられている。タスケテ。}
+	\end{itemize}
+  \item Debianとのつきあい
+	\begin{itemize}
+	 \item 大学時代に素敵な先輩がた(うち現在DD2名,DM1名)によって布教
+	 \item 個人的にはパッケージの構成の統一感が一番好き
+	 \onslide<2>{\item \sout{あんまり貢献していない}}
+	\end{itemize}
+  \item Rust
+	\begin{itemize}
+	 \item 新しい言語が勉強したい
+	 \item でもPythonやRubyはネイティブなバイナリにならなくてツラい
+	 \onslide<2>{\item Goが流行ってるらしい}
+	 \item じゃあMozilla好きだしRustにしよう \onslide<2>{←?}
+	\end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{本日の流れ}
+\begin{itemize}
+ \item Rustをさわってみる
+       \begin{itemize}
+	\item rustup
+	\item Cargo
+       \end{itemize}
+ \item Rustの特徴のご紹介
+       \begin{itemize}
+	\item ownershipやlifetime
+	\item パターンマッチング
+	\item IteratorとClosures
+	\item Trait
+       \end{itemize}
+ \item Debianパッケージング
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Rustとは?}
+ \begin{itemize}
+  \item Mozillaが開発したシステムプログラミング言語
+	\begin{itemize}
+	 \item Servo(絶賛開発中))というブラウザエンジンのために開発
+	 \item 安全性・並行性について考えられて設計されている
+	 \item 静的型付け言語
+	\end{itemize}
+  \item カニ?
+	\begin{itemize}
+	 \item Rustプログラマーの事をRustacean(ラストシアン)と呼ぶ
+	 \item ``Crustacean(甲殻類)`` から来ているらしい
+	       \begin{itemize}
+		\item オライリー本の表紙はオオヒロバオウギガニ
+		\item 非公式なマスコットもカニ \href{http://rustacean.net/}{(Ferrisっていう模様)}
+	       \end{itemize}
+	\end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{インストール}
+ \begin{itemize}
+  \item \texttt{rustup}を入れるのが一応公式
+	\begin{itemize}
+	 \item \verb@curl https://sh.rustup.rs -sSf | sh@
+	 \item あなたのhome dirに色々と入ります \verb@~/.cargo@
+	\end{itemize}
+  \item \texttt{rustup}のサブコマンドたち
+	\begin{description}
+	 \item[default] デフォルトのツールチェーンを切り替えます。
+		    \begin{itemize}
+		     \item ツールチェーン: stableかnightlyか特定のバージョンを指定できる
+		    \end{itemize}
+	 \item[update] 更新をかけます。
+		    nightlyを使う場合はちょくちょく使う
+		    \begin{itemize}
+		     \item そしてたまに壊れる
+		     \item 壊れるといっても、コンパイラがおかしくなった事はないです
+		    \end{itemize}
+	 \item[completions] シェルの補完用のコードを吐く (bash, zsh, fish, \textbf{PowerShell}, etc..)
+	\end{description}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Debianパッケージでのインストール}
+ \begin{itemize}
+  \item もちろんDebianのパッケージもある
+	\begin{itemize}
+	 \item ビルドツールであるcargoのパッケージを入れるのがよろしいかと
+	 \item 一緒にコンパイラ(rustc)も入ります
+	\end{itemize}
+ \end{itemize}
+ \begin{commandline}
+% apt show cargo
+Package: cargo
+Version: 0.33.0-1
+Priority: optional
+Section: rust
+Maintainer: Rust Maintainers <pkg-rust-maintainers@alioth-lists.debian.net>
+Installed-Size: 9,453 kB
+Depends: libc6 (>= 2.18), libcurl3-gnutls (>= 7.28.0), libgcc1 (>= 1:4.2), \
+libgit2-27 (>= 0.26.0), libssh2-1 (>= 1.2.5), libssl1.1 (>= 1.1.0), \
+zlib1g (>= 1:1.1.4), rustc (>= 1.24), binutils, gcc | clang | c-compiler
+Suggests: cargo-doc, python3
+Homepage: https://crates.io/
+Download-Size: 2,483 kB
+APT-Manual-Installed: yes
+APT-Sources: http://ftp.jp.debian.org/debian sid/main amd64 Packages
+ \end{commandline}
+\end{frame}
+
+\begin{frame}[fragile]{Hello World (1/)}
+ \begin{itemize}
+  \item Rustのプロジェクトは、 \verb|cargo new| で作ります
+	\begin{itemize}
+	 \item \verb|--bin| (現default) か \verb|--lib| (旧default) でパッケージの種類も指定できます
+	\end{itemize}
+ \end{itemize}
+\begin{commandline}
+% cargo new hello
+     Created binary (application) `hello` package
+\end{commandline}
+\begin{itemize}
+ \item 実行すると、Cargo.tomlとsrc/main.rsができる
+\end{itemize}
+\begin{commandline}
+% tree
+.
+├── Cargo.toml
+└── src
+    └── main.rs
+
+1 directory, 2 files
+\end{commandline}
+\end{frame}
+
+\begin{frame}[fragile]{Hello World (2/)}
+ \begin{itemize}
+  \item 実はプロジェクトを作った時点でHello Worldの半分が完了している
+	\begin{itemize}
+	 \item 生成されたsrc/main.rsの中身↓
+	\end{itemize}
+ \end{itemize}
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+fn main() {
+    println!("Hello, world!");
+}\end{lstlisting}
+\begin{itemize}
+ \item 実行するには \verb|cargo run|
+\end{itemize}
+\begin{commandline}
+% cargo run
+   Compiling hello v0.1.0 (/path/to/hello)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.31s
+     Running `target/debug/hello`
+Hello, world!
+\end{commandline}
+\end{frame}
+
+\begin{frame}[fragile]{Hello World (3/)}
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+fn main() {
+    println!("Hello, world!");
+}\end{lstlisting}
+\begin{itemize}
+ \item 少しコードを見てみる
+       \begin{description}
+	\item[関数定義] \verb|fn|
+       \end{description}
+\end{itemize}
+\end{frame}
+
+\takahashi[50]{\vspace*{2zw} 以上}
+
+\begin{frame}[fragile]{どっかに挿入予定のメモ}
+ \begin{itemize}
+  \item Rustのファイルの拡張子は .rs
+	\begin{itemize}
+	 \item Rustで書かれたプロジェクトの公式サイトが \verb|http://xxx.rs| であることが多い
+	 \item 国別コードトップドメイン .rs : セルビア
+	\end{itemize}
+  \item \texttt{rust-fmt}というツールがある
+	\begin{itemize}
+	 \item \texttt{gofmt}とか\texttt{autopep8}とか\texttt{clang-format}的なツール
+	\end{itemize}
+  \item Podcast (Rebuild.fm?) で誰かが言ってた
+	\begin{itemize}
+	 \item Go: C++が嫌いで駆逐したい
+	 \item Rust: C++が大好きだけど辛いのでなんとかしたい
+	\end{itemize}
+  \item Rustacean
+	\begin{itemize}
+	 \item LISPer, Pythonista, Rubyist, Gopher, TeXnician的な
+	 \item ``crustaceans'' : 甲殻類
+	       \begin{itemize}
+		\item オライリー本の表紙はオオヒロバオウギガニ
+		\item 非公式なマスコットもカニ \href{http://rustacean.net/}{(Ferrisっていう模様)}
+	       \end{itemize}
+	\end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{どっかに挿入予定のメモ}
+ \begin{itemize}
+  \item とりあえずパッケージにするには
+	\begin{itemize}
+	 \item \verb|dh_make| を実行
+	 \item debian/rulesの\texttt{dh}の引数に\verb|--buildsystem cargo|を追加
+	\end{itemize}
+ \end{itemize}
+ \begin{commandline}
+cp: './debian/cargo-checksum.json' を stat できません: \
+そのようなファイルやディレクトリはありません
+ \end{commandline}
+ \begin{itemize}
+  \item むぅ?
+	\begin{itemize}
+	 \item \texttt{cargo-vendor}で各crateのchecksumは作れるけど、
+	       \texttt{main.rs}なアプリはどうしたら?
+	\end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{どっかに挿入予定のメモ}
+ \begin{itemize}
+  \item \texttt{debcargo}, \texttt{debcargo-conf}
+	\begin{itemize}
+	 \item crate.ioに存在するcrateにしか対応していない模様
+	\end{itemize}
+ \end{itemize}
+\end{frame}
+
+\end{document}

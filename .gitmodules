@@ -1,3 +1,6 @@
 [submodule "beamerthemeKansaiDebianMeeting"]
-	path = beamerthemeKansaiDebianMeeting
+	path = submodules/beamerthemeKansaiDebianMeeting
 	url = https://github.com/uwabami/beamerthemeKansaiDebianMeeting.git
+[submodule "submodules/listings-rust"]
+	path = submodules/listings-rust
+	url = https://github.com/denki/listings-rust.git
