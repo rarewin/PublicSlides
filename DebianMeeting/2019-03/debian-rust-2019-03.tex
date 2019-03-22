@@ -1,4 +1,4 @@
-\documentclass[cjk,dvipdfmx,10pt,compress,t,fragile%
+\documentclass[cjk,dvipdfmx,10pt,compress,fragile%
 hyperref={bookmarks=true,bookmarksnumbered=true,bookmarksopen=false,%
 colorlinks=false,%
 pdftitle={第 134 回 関西 Debian 勉強会},%
@@ -58,7 +58,7 @@ pdfsubject={資料},%
 \titlepage
 \end{frame}
 
-\begin{frame}[fragile]{自己紹介}
+\begin{frame}[t,fragile]{自己紹介}
  \begin{itemize}
   \item Katsuki Kobayashi
 	\begin{itemize}
@@ -83,7 +83,7 @@ pdfsubject={資料},%
  \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{本日の流れ}
+\begin{frame}[t,fragile]{本日の流れ}
 \begin{itemize}
  \item Rustをさわってみる
        \begin{itemize}
@@ -99,11 +99,11 @@ pdfsubject={資料},%
 \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Rustとは?}
+\begin{frame}[t,fragile]{Rustとは?}
  \begin{itemize}
   \item Mozillaが開発したシステムプログラミング言語
 	\begin{itemize}
-	 \item Servo(絶賛開発中))というブラウザエンジンのために開発
+	 \item Servo(絶賛開発中)というブラウザエンジンのために開発
 	 \item 安全性・並行性について考えられて設計されている
 	 \item 静的型付け言語
 	\end{itemize}
@@ -119,7 +119,7 @@ pdfsubject={資料},%
  \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{インストール}
+\begin{frame}[t,fragile]{インストール}
  \begin{itemize}
   \item \texttt{rustup}を入れるのが一応公式
 	\begin{itemize}
@@ -143,7 +143,7 @@ pdfsubject={資料},%
  \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Debianパッケージでのインストール}
+\begin{frame}[t,fragile]{Debianパッケージでのインストール}
  \begin{itemize}
   \item もちろんDebianのパッケージもある
 	\begin{itemize}
@@ -170,7 +170,7 @@ APT-Sources: http://ftp.jp.debian.org/debian sid/main amd64 Packages
  \end{commandline}
 \end{frame}
 
-\begin{frame}[fragile]{Hello World (1/4)}
+\begin{frame}[t,fragile]{Hello World (1/4)}
  \begin{itemize}
   \item Rustのプロジェクトは、 \verb|cargo new| で作ります
 	\begin{itemize}
@@ -195,7 +195,7 @@ APT-Sources: http://ftp.jp.debian.org/debian sid/main amd64 Packages
 \end{commandline}
 \end{frame}
 
-\begin{frame}[fragile]{Hello World (2/4)}
+\begin{frame}[t,fragile]{Hello World (2/4)}
  \begin{itemize}
   \item 実はプロジェクトを作った時点でHello Worldの半分が完了している
 	\begin{itemize}
@@ -218,7 +218,7 @@ Hello, world!
 \end{commandline}
 \end{frame}
 
-\begin{frame}[fragile]{Hello World (3/4)}
+\begin{frame}[t,fragile]{Hello World (3/4)}
 \begin{itemize}
  \item 少しコードを見てみる
 \end{itemize}
@@ -233,7 +233,7 @@ fn main() {
  \end{description}
 \end{frame}
 
-\begin{frame}[fragile]{Hello World (4/4)}
+\begin{frame}[t,fragile]{Hello World (4/4)}
 \begin{itemize}
  \item Cargo.toml
 \end{itemize}
@@ -261,7 +261,7 @@ version = "0.1.0"
 \end{commandline}
 \end{frame}
 
-\begin{frame}[fragile]{それじゃあ……}
+\begin{frame}[t,fragile]{それじゃあ……}
 \begin{itemize}
  \item ちょっと色々とRustの構文とか機能を紹介します
        \begin{itemize}
@@ -290,7 +290,7 @@ I've found that Rust has forced me to learn many of the things that I was slowly
 \end{quote}
 \end{frame}
 
-\begin{frame}[fragile]{変数宣言(1/3)}
+\begin{frame}[t,fragile]{変数宣言(1/3)}
 \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
     let x = 1;
     println!("x = {}", x);
@@ -310,7 +310,7 @@ I've found that Rust has forced me to learn many of the things that I was slowly
 \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{変数宣言(2/3)}
+\begin{frame}[t,fragile]{変数宣言(2/3)}
 \vspace*{-2zw}
 \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
     let mut y: u32 = 1;
@@ -337,7 +337,7 @@ display a backtrace.
 \end{commandline}
 \end{frame}
 
-\begin{frame}[fragile]{変数宣言(3/3)}
+\begin{frame}[t,fragile]{変数宣言(3/3)}
  \begin{itemize}
   \item リリースビルド(\verb|--release|付き)すると最後まで実行する
 	\begin{itemize}
@@ -355,7 +355,7 @@ y = 4294967295
 \end{commandline}
 \end{frame}
 
-\begin{frame}[fragile]{基本的な型}
+\begin{frame}[t,fragile]{基本的な型}
  \begin{description}
   \item[整数]
 	      \textbf{符号無し:} \texttt{u8}, \texttt{u16}, \texttt{u32}, \texttt{u64}, \texttt{usize}\\
@@ -365,7 +365,7 @@ y = 4294967295
   \item[文字] \texttt{char}  (Unicodeの1文字)
   \item[文字列] \texttt{String}
 	     \begin{itemize}
-	      \item ただし、スライス型の \texttt{\&str} があってとてもややこしい
+	      \item ただし、文字列リテラルの \texttt{str} があってとてもややこしい
 	     \end{itemize}
   \item[配列] \texttt{[T; N]} (\texttt{T}: 型,  \texttt{N}: 要素数)
   \item[ベクター] \texttt{Vec<T>} (\texttt{T}: 型)
@@ -373,7 +373,35 @@ y = 4294967295
  \end{description}
 \end{frame}
 
-\begin{frame}[fragile]{関数}
+\begin{frame}[t,fragile]{\texttt{String}と\texttt{str} (1/2)}
+\begin{itemize}
+ \item C++の\texttt{std::string}と\texttt{char}に似ている
+\end{itemize}
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+    let a = "abcd".to_string(); // String::from("abcd"); も可
+    let b = &a[1..];
+    let c = "zyxwv";\end{lstlisting}
+\begin{center}
+ \includegraphics[keepaspectratio,height=4cm]{./img/rustlang-str-string.png}
+\end{center}
+\end{frame}
+
+\begin{frame}[t,fragile]{\texttt{String}と\texttt{str} (2/2)}
+\begin{itemize}
+ \item \texttt{String}は可変長
+\end{itemize}
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+    let mut a = "abcd".to_string();
+    //  ^^^
+    a.push_str("efg");  // OK
+
+    let mut c = "zyxwv";
+    // no method named `push_str` found
+    // for type `&str` in the current scope
+    c.push_str("ut");  // Error!! \end{lstlisting}
+\end{frame}
+
+\begin{frame}[t,fragile]{関数}
  \begin{itemize}
   \item \texttt{fn} キーワードと \texttt{->} トークンを使って書く
  \end{itemize}
@@ -395,10 +423,132 @@ Running `target/debug/function`
 \end{commandline}
 \end{frame}
 
-%\begin{frame}[fragile]{関数}
+\begin{frame}[t,fragile]{所有権(1/4)}
+ \begin{itemize}
+  \item 整数型と文字列型の変数を複数の変数に代入してみる
+	\begin{itemize}
+	 \onslide<2>{\item どうなると思います?}
+	\end{itemize}
+ \end{itemize}
+ \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+    let i0 = 1;
+    let i1 = i0;
+    let i2 = i0;
+
+    let s0: String = "hoge".to_string();
+    let s1 = s0;
+    let s2 = s0;\end{lstlisting}
+\end{frame}
+
+\begin{frame}[t,fragile]{所有権(2/4)}
+\begin{itemize}
+ \item 文字列型の方だけコンパイルエラーになる
+       \begin{itemize}
+	\item Rustでは、代入、関数の引数、関数の戻り値で
+	      所有権が移動する
+	\item ただし、整数等、一部の型はコピーになる
+	      \begin{itemize}
+	       \item そのため\verb|i2|ではエラーになっていない
+	       \item コピーされる型については、
+		     エラーで出ている ``Copy trait '' というのがミソ
+	      \end{itemize}
+       \end{itemize}
+\end{itemize}
+\begin{commandline}
+error[E0382]: use of moved value: `s0`
+ --> ownership/src/main.rs:8:15
+  |
+6 |     let s0: String = "hoge".to_string();
+  |         -- move occurs because `s0` has type `std::string::String`, \
+               which does not implement the `Copy` trait
+7 |     let s1 = s0;
+  |              -- value moved here
+8 |     let s2 = s0;
+  |              ^^ value used here after move
+\end{commandline}
+\end{frame}
+
+\begin{frame}[t,fragile]{所有権(3/4)}
+\begin{itemize}
+ \item 関数の引数も駄目なので以下もアウト
+\end{itemize}
+ \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+fn consume(_s: String) {}
+// 中略
+    let h: String = "Hello World".to_string();
+    consume(h);
+    let hh = h;
+\end{lstlisting}
+
+\begin{commandline}
+12 |     let h: String = "Hello World".to_string();
+   |         - move occurs because `h` has type `std::string::String`, \
+               which does not implement the `Copy` trait
+13 |     consume(h);
+|                - value moved here
+14 |     let hh = h;
+|                 ^ value used here after move
+\end{commandline}
+\end{frame}
+
+\begin{frame}[t,fragile]{所有権(4/4)}
+\begin{itemize}
+ \item 逆に関数の戻り値の所有権を呼び元に渡せる
+\end{itemize}
+ \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+fn generate(i: i32) -> Vec<i32> {
+    let mut v = Vec::new();
+    v.push(i);
+    return v;
+}
+// 略
+    let v1 = generate(10);
+    let mut v2 = generate(100);
+    v2.push(101);
+    println!("v1: {:?}", v1); // v1: [10]
+    println!("v2: {:?}", v2); // v2: [100, 101]\end{lstlisting}
+\end{frame}
+
+\begin{frame}[t,fragile]{参照, 借用}
+ \begin{itemize}
+  \item 所有権を渡したい場合には参照を使う
+	\begin{itemize}
+	 \item Rustでは「借用」とも言う
+	\end{itemize}
+ \end{itemize}
+\end{frame}
+
+\takahashi[30]{ようやくDebian要素}
+
+\begin{frame}[t,fragile]{Debianパッケージにしてみる}
+ \begin{itemize}
+  \item 一番簡単な方法 : \texttt{cargo-deb}
+	\begin{itemize}
+	 \item A cargo subcommand that generates Debian packages from information in Cargo.toml
+	       \begin{itemize}
+		\item \href{https://github.com/mmstick/cargo-deb}{GitHub}
+		\item \href{https://users.rust-lang.org/t/cargo-deb-make-debian-packages-from-cargo-projects/12199}{アナウンス@users.rustlang.org}
+	       \end{itemize}
+	 \item インストール方法
+	       \begin{itemize}
+		\item \verb|cargo install cargo-deb|
+		\item debは……ない……!!
+	       \end{itemize}
+	 \item 問題点
+	       \begin{itemize}
+		\item 公式にはとても入らないdebを吐く
+		\item 単一バイナリのプロジェクトにしか対応していない
+	       \end{itemize}
+	 \item まぁ、えいやと/usr/binに入れたいならアリかもですが……
+	\end{itemize}
+ \end{itemize}
+\end{frame}
+
+%\begin{frame}[t,fragile]{真面目にDebianパッケージにしてみる}
+% 
 %\end{frame}
 
-\begin{frame}[fragile]{\texttt{dh\_make}する}
+\begin{frame}[t,fragile]{\texttt{dh\_make}する}
 \begin{commandline}
 % dh_make -p rwget_0.1.0 --createorig
 Type of package: (single, indep, library, python)
@@ -416,10 +566,9 @@ Done. Please edit the files in the debian/ subdirectory now.
 \end{commandline}
 \end{frame}
 
+\takahashi[50]{以上}
 
-\takahashi[50]{\vspace*{2zw} 以上}
-
-\begin{frame}[fragile]{どっかに挿入予定のメモ}
+\begin{frame}[t,fragile]{どっかに挿入予定のメモ}
  \begin{itemize}
   \item Rustのファイルの拡張子は .rs
 	\begin{itemize}
@@ -447,7 +596,7 @@ Done. Please edit the files in the debian/ subdirectory now.
  \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{どっかに挿入予定のメモ}
+\begin{frame}[t,fragile]{どっかに挿入予定のメモ}
  \begin{itemize}
   \item とりあえずパッケージにするには
 	\begin{itemize}
@@ -468,12 +617,14 @@ cp: './debian/cargo-checksum.json' を stat できません: \
  \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{どっかに挿入予定のメモ}
+\begin{frame}[t,fragile]{どっかに挿入予定のメモ}
+\begin{commandline}
 debian cargo wrapper: running subprocess (['env', 'RUST_BACKTRACE=1', '/usr/bin/cargo', '-Zavoid-dev-deps', 'build', '--verbose', '--verbose', '-j4', '--target', 'x86_64-unknown-linux-gnu'],) {}
 error: no matching package named `hyper` found
+\end{commandline}
 \end{frame}
 
-\begin{frame}[fragile]{どっかに挿入予定のメモ}
+\begin{frame}[t,fragile]{どっかに挿入予定のメモ}
  \begin{itemize}
   \item \texttt{debcargo}, \texttt{debcargo-conf}
 	\begin{itemize}

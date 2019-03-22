@@ -1,2 +1,2 @@
 [workspace]
-members = ["hello", "variable", "function", "string", "ownership"]
+members = ["hello", "variable", "function", "string", "ownership", "borrow"]
