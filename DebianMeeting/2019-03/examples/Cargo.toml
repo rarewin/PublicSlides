@@ -1,2 +1,15 @@
 [workspace]
-members = ["hello", "variable", "function", "string", "ownership", "borrow"]
+members = [
+	"hello",
+	"variable",
+	"function",
+	"string",
+	"ownership",
+	"borrow",
+	"lifetime",
+	"structtest",
+	"traittest",
+	"enumtest",
+	"option_result",
+	"clap_test",
+	]

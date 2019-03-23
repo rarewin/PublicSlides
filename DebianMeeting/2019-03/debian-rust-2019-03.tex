@@ -26,6 +26,7 @@ pdfsubject={資料},%
 \usepackage{amssymb}
 \usepackage{newtxtext}
 \usepackage{listings, listings-rust}
+\usepackage{xcolor}
 \usepackage{hyperref}
 \AtBeginDvi{\special{pdf:tounicode EUC-UCS2}}
 \usetheme{KansaiDebian}
@@ -202,7 +203,7 @@ APT-Sources: http://ftp.jp.debian.org/debian sid/main amd64 Packages
 	 \item 生成されたsrc/main.rsの中身↓
 	\end{itemize}
  \end{itemize}
-\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
 fn main() {
     println!("Hello, world!");
 }\end{lstlisting}
@@ -222,7 +223,7 @@ Hello, world!
 \begin{itemize}
  \item 少しコードを見てみる
 \end{itemize}
-\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
 fn main() {
     println!("Hello, world!");
 }\end{lstlisting}
@@ -291,7 +292,7 @@ I've found that Rust has forced me to learn many of the things that I was slowly
 \end{frame}
 
 \begin{frame}[t,fragile]{変数宣言(1/3)}
-\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
     let x = 1;
     println!("x = {}", x);
     let x = 1.25;
@@ -312,7 +313,7 @@ I've found that Rust has forced me to learn many of the things that I was slowly
 
 \begin{frame}[t,fragile]{変数宣言(2/3)}
 \vspace*{-2zw}
-\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
     let mut y: u32 = 1;
     y -= 1;
     y -= 1;
@@ -377,7 +378,7 @@ y = 4294967295
 \begin{itemize}
  \item C++の\texttt{std::string}と\texttt{char}に似ている
 \end{itemize}
-\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
     let a = "abcd".to_string(); // String::from("abcd"); も可
     let b = &a[1..];
     let c = "zyxwv";\end{lstlisting}
@@ -390,7 +391,7 @@ y = 4294967295
 \begin{itemize}
  \item \texttt{String}は可変長
 \end{itemize}
-\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
     let mut a = "abcd".to_string();
     //  ^^^
     a.push_str("efg");  // OK
@@ -405,7 +406,7 @@ y = 4294967295
  \begin{itemize}
   \item \texttt{fn} キーワードと \texttt{->} トークンを使って書く
  \end{itemize}
-\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
 fn add(a: i32, b: i32) -> i32 {
     return a + b;
 }
@@ -430,7 +431,7 @@ Running `target/debug/function`
 	 \onslide<2>{\item どうなると思います?}
 	\end{itemize}
  \end{itemize}
- \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+ \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
     let i0 = 1;
     let i1 = i0;
     let i2 = i0;
@@ -472,7 +473,7 @@ error[E0382]: use of moved value: `s0`
 \begin{itemize}
  \item 関数の引数も駄目なので以下もアウト
 \end{itemize}
- \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+ \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
 fn consume(_s: String) {}
 // 中略
     let h: String = "Hello World".to_string();
@@ -485,9 +486,9 @@ fn consume(_s: String) {}
    |         - move occurs because `h` has type `std::string::String`, \
                which does not implement the `Copy` trait
 13 |     consume(h);
-|                - value moved here
+   |             - value moved here
 14 |     let hh = h;
-|                 ^ value used here after move
+   |              ^ value used here after move
 \end{commandline}
 \end{frame}
 
@@ -495,7 +496,7 @@ fn consume(_s: String) {}
 \begin{itemize}
  \item 逆に関数の戻り値の所有権を呼び元に渡せる
 \end{itemize}
- \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust]
+ \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
 fn generate(i: i32) -> Vec<i32> {
     let mut v = Vec::new();
     v.push(i);
@@ -509,15 +510,589 @@ fn generate(i: i32) -> Vec<i32> {
     println!("v2: {:?}", v2); // v2: [100, 101]\end{lstlisting}
 \end{frame}
 
-\begin{frame}[t,fragile]{参照, 借用}
+\begin{frame}[t,fragile]{参照, 借用(1/2)}
  \begin{itemize}
   \item 所有権を渡したい場合には参照を使う
 	\begin{itemize}
 	 \item Rustでは「借用」とも言う
+	 \item C++とおなじく、 ``\texttt{\&}'' を使う
+	 \item C++と違い
+	       \begin{itemize}
+		\item 借用する側(参照される側)に``\texttt{\&}''を付ける
+		\item 関数の呼び出し元と呼び出し先両方に``\texttt{\&}''が必要
+	       \end{itemize}
+	\end{itemize}
+ \end{itemize}
+ \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
+fn consume(_s: &String) {}
+// 略
+    let s0: String = "hoge".to_string();
+    let s1 = &s0;
+    let s2 = &s0;
+
+    let h: String = "Hello World".to_string();
+    consume(&h);
+    let hh = h;\end{lstlisting}
+\end{frame}
+
+\begin{frame}[t,fragile]{参照, 借用(2/2)}
+\begin{itemize}
+ \item 参照の解決には ``\texttt{*}'' を使う
+\end{itemize}
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
+    let i0 = 5;
+    let i1 = &i0;
+
+    println!("i0: {}, i1: {}", i0, *i1);\end{lstlisting}
+\begin{itemize}
+ \item でも、関数で使う場合だったり、色々な場面で省略できたりする
+\end{itemize}
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
+fn catlength(a: &String, b: &String) -> usize {
+    return a.len() + b.len();
+}
+// 略
+    let s0 = "hoge".to_string();
+    let s1 = "fuga".to_string();
+    println!("{}", catlength(&s0, &s1));\end{lstlisting}
+\end{frame}
+
+\begin{frame}[t,fragile]{ライフタイム(1/6)}
+\begin{itemize}
+ \item C言語とおなじくRustの変数にはスコープがある(GCとかはない)
+\end{itemize}
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
+    {
+        let a = 0;
+    }  // ここでドロップ
+    println!("{}", a);\end{lstlisting}
+\begin{commandline}
+error[E0425]: cannot find value `a` in this scope
+--> lifetime/src/main.rs:5:20
+  |
+5 |     println!("{}", a);
+  |                    ^ not found in this scope
+\end{commandline}
+\end{frame}
+
+\begin{frame}[t,fragile]{ライフタイム(2/6)}
+\begin{itemize}
+ \item 参照していた場合、\textbf{コンパイル時}に怒られる
+\end{itemize}
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
+    let r;
+    {
+        let b = 0;
+        r = &b;
+    }
+    println!("{}", r);\end{lstlisting}
+\begin{commandline}
+error[E0597]: `b` does not live long enough
+--> lifetime/src/main.rs:11:9
+   |
+11 |         r = &b;
+   |         ^^^^^^ borrowed value does not live long enough
+12 |     }
+   |     - `b` dropped here while still borrowed
+13 |     println!("{}", r);
+   |                    - borrow later used here
+\end{commandline}
+\end{frame}
+
+\begin{frame}[t,fragile]{ライフタイム(3/6)}
+\begin{itemize}
+ \item さらにややこしいのが関数で、以下はエラーになる
+       \begin{itemize}
+	\item さらりと書いてますが、セミコロンを抜かすと値を作ります
+	      \begin{itemize}
+	       \item そのため、 \texttt{x} や \texttt{y} の後ろにセミコロンがない
+	       \item if \textbf{式} の後ろにもセミコロンがない
+	      \end{itemize}
+       \end{itemize}
+\end{itemize}
+
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
+fn longest(x: &str, y: &str) -> &str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}\end{lstlisting}
+\end{frame}
+
+\begin{frame}[t,fragile]{ライフタイム(4/6)}
+\vspace*{-2zw}
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
+fn longest(x: &str, y: &str) -> &str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}\end{lstlisting}
+\begin{commandline}
+error[E0106]: missing lifetime specifier
+--> lifetime/src/main.rs:1:33
+  |
+1 | fn longest(x: &str, y: &str) -> &str {
+  |                                 ^ expected lifetime parameter
+  |
+= help: this function's return type contains a borrowed value, \
+  but the signature does not say whether it is borrowed from `x` or `y`
+\end{commandline}
+\end{frame}
+
+\begin{frame}[t,fragile]{ライフタイム(5/6)}
+\begin{commandline}
+error[E0106]: missing lifetime specifier
+--> lifetime/src/main.rs:1:33
+  |
+1 | fn longest(x: &str, y: &str) -> &str {
+  |                                 ^ expected lifetime parameter
+  |
+= help: this function's return type contains a borrowed value, \
+  but the signature does not say whether it is borrowed from `x` or `y`
+\end{commandline}
+ \begin{itemize}
+  \item 問題はなにか?
+	\begin{itemize}
+	 \item 実行するまで \texttt{x} と \texttt{y} (どちらも参照)のどちらを返すかわからない
+	 \item 戻り値のライフタイムがどうなるかわからないので、その後の処理がチェックできない
+	\end{itemize}
+  \item んじゃどうするの?
+	\begin{itemize}
+	 \item コンパイラが怒っている通り、lifetime specifierを書けばOK
+	 \item 基本的にRustのコンパイラのエラーメッセージは親切です
+	       \begin{itemize}
+		\item 一部のコンパイラがカオスなだけもしれませんが……
+		      \color{lightgray}{ねぇ、gccさん}
+	       \end{itemize}
 	\end{itemize}
  \end{itemize}
 \end{frame}
 
+\begin{frame}[t,fragile]{ライフタイム(6/6)}
+\begin{itemize}
+ \item 以下のように書く必要がある
+       \begin{itemize}
+	\item 生存期間を \texttt{'a} とする
+	      \begin{itemize}
+	       \item 記号は慣例的には適当な模様
+	      \end{itemize}
+	\item 戻り値は \texttt{x}, \texttt{y} の短い方の生存期間を持つ必要がある
+	\item \verb|fn longest<'a, 'b>(x: &'a str, y: &'b str) -> &'a str| とも書けるが\\
+	      \texttt{y} の生存期間が \texttt{'a} でないためエラーになる
+       \end{itemize}
+\end{itemize}
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}\end{lstlisting}
+\end{frame}
+
+\begin{frame}[t,fragile]{構造体(1/2)}
+\begin{itemize}
+ \item Rustにはclassはない
+       \begin{itemize}
+	\item 素直に(?)構造体を使う
+	\item 定義時は各要素の名前が必要 (まったく同名の変数で初期化するときのみ省略可)
+       \end{itemize}
+\end{itemize}
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
+struct Point {
+    x: f64,
+    y: f64,
+}
+// 略
+    let _p0 = Point { x: 1.0, y: 1.0 };
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[t,fragile]{構造体(2/2)}
+\begin{itemize}
+ \item 構造体だけど、関数を生やせるよww
+       \begin{itemize}
+	\item メンバー変数を使いたい場合は\texttt{self}(値を変更したい場合は\texttt{mut}を付ける)
+       \end{itemize}
+\end{itemize}
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
+struct Point {
+    x: f64,
+    y: f64,
+}
+
+impl Point {
+    fn abs(&self) -> f64 {
+        (self.x * self.x + self.y * self.y).sqrt()
+    }
+}
+
+fn main() {
+    let p0 = Point { x: 1.0, y: 1.0 };
+    println!("{}", p0.abs()); // => 1.4142135623730951
+}\end{lstlisting}
+\end{frame}
+
+\begin{frame}[t,fragile]{ジェネリック}
+\begin{itemize}
+ \item 構造体、関数等をgenericにすることができる
+       \begin{itemize}
+	\item C++のテンプレート、Javaのジェネリクス的なもの
+       \end{itemize}
+\end{itemize}
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
+struct GenPoint<T> {
+    x: T,
+    y: T,
+}
+// 略
+    let _p1 = GenPoint::<i32> { x: 1, y: 1 };
+    let _p2 = GenPoint { x: 1, y: 1 };
+    let _p3 = GenPoint { x: 1.5, y: 2.0 };
+\end{lstlisting}
+\begin{itemize}
+ \item \verb|GenPoint<T, U>| として、 \texttt{y} を \texttt{U} とすることもできる
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t,fragile]{Trait (1/5)}
+ \begin{itemize}
+  \item JavaとかGoのインターフェース的なものもある -> Trait(トレイト)
+  \item traitの定義は以下のように \texttt{trait} キーワードで作る
+	\begin{itemize}
+	 \item duckはwalkしてquackできるもの
+	\end{itemize}
+ \end{itemize}
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
+trait Duck {
+    fn walk(&self);
+    fn quack(&self);
+}\end{lstlisting}
+\end{frame}
+
+\begin{frame}[t,fragile]{Trait (2/5)}
+\begin{itemize}
+ \item 実装は以下のように
+\end{itemize}
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
+struct RealDuck {}
+
+impl Duck for RealDuck {
+    fn walk(&self) {
+        println!("duck walking");
+    }
+
+    fn quack(&self) {
+        println!("quack")
+    }
+}\end{lstlisting}
+\end{frame}
+
+\begin{frame}[t,fragile]{Trait (3/5)}
+\begin{itemize}
+ \item 同様に\texttt{Dog}も実装する
+\end{itemize}
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
+struct Dog {}
+
+impl Duck for Dog {
+    fn walk(&self) {
+        println!("dog walking");
+    }
+
+    fn quack(&self) {
+        println!("bow")
+    }
+}\end{lstlisting}
+\end{frame}
+
+\begin{frame}[t,fragile]{Trait (4/5)}
+\begin{itemize}
+ \item そうすると、以下のように \texttt{Duck} を引数にした関数 \verb|test_duck()| に\\
+       \texttt{RealDuck} と \texttt{Dog}のどちらも渡すことができる
+\end{itemize}
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
+fn test_duck(duck: &Duck) {
+    duck.walk();
+    duck.quack();
+}
+
+fn main() {
+    let duck = RealDuck {};
+    let dog = Dog {};
+
+    test_duck(&duck);
+    test_duck(&dog);
+}\end{lstlisting}
+\end{frame}
+
+\begin{frame}[t,fragile]{Trait (5/5)}
+ \begin{itemize}
+  \item 複数のTraitを実装した型を要求することもできる
+	\begin{itemize}
+	 \item \verb|pub fn notify(item: impl Summary + Display) {|
+	       \begin{itemize}
+		\item \verb|Summary| と \verb|Display| を同時に実装した型
+	       \end{itemize}
+	\end{itemize}
+  \item 読み辛いので、以下の書式もある
+	\begin{itemize}
+	 \item \verb|pub fn notify<T: Summary + Display>(item: T) {|
+	\end{itemize}
+  \item さらにこんな書式も……
+ \end{itemize}
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
+fn some_function<T, U>(t: T, u: U) -> i32
+    where T: Display + Clone,
+          U: Clone + Debug
+{\end{lstlisting}
+\end{frame}
+
+\begin{frame}[t,fragile]{enum (1/5)}
+ \begin{itemize}
+  \item Rustのenumは \sout{色々とおかしい} 相当に強力
+  \item C言語のような \texttt{enum} はもちろん作れる
+ \end{itemize}
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
+enum Fruits {
+    Apple,
+    Banana,
+    Orange,
+    Peach,
+}
+// 略
+    let _hoge = Fruits::Apple;\end{lstlisting}
+\end{frame}
+
+\begin{frame}[t,fragile]{enum (2/5)}
+ \begin{itemize}
+  \item enum変数の中に値を持つことができる
+	\begin{itemize}
+	 \item しかも、型も個数も自由自在
+	 \item \verb|(u8, u8, u8, u8)| はタプル
+	\end{itemize}
+ \end{itemize}
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
+enum IpAddr {
+    V4((u8, u8, u8, u8)),
+    V6(String),
+}
+// 略
+    let v4_addr = IpAddr::V4((127, 0, 0, 1));
+    let v6_addr = IpAddr::V6("::1".into());\end{lstlisting}
+\end{frame}
+
+\begin{frame}[t,fragile]{enum (3/5)}
+\begin{itemize}
+ \item 値を持たせたenumはmatchを使って取り出すことができる
+       \begin{itemize}
+	\item C言語のswitch分のdefault的なのは ``\verb|_ =>|'' と書く
+       \end{itemize}
+\end{itemize}
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
+fn extract_addr(addr: &IpAddr) {
+    match addr {
+        IpAddr::V4(a) => {
+            println!("{}.{}.{}.{}", a.0, a.1, a.2, a.3);
+        }
+        IpAddr::V6(a) => {
+            println!("{}", a);
+        }
+    }
+}
+// 略
+    extract_addr(&v4_addr); // => 127.0.0.1
+    extract_addr(&v6_addr); // => ::1\end{lstlisting}
+\end{frame}
+
+\begin{frame}[t,fragile]{enum (4/5)}
+ \begin{itemize}
+  \item タプル型ヴァリアント、構造体型ヴァリアントなんてものも……
+	\begin{itemize}
+	 \item やはり、matchを使って取り出す
+	\end{itemize}
+  \item タプル型ヴァリアントの例
+ \end{itemize}
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
+enum RoughTime {
+    InThePast(TimeUnit, u32),
+    JustNow,
+    InTheFuture(TimeUnit, u32),
+}
+// 略
+    match &t {
+        RoughTime::InTheFuture(_, t) => {
+            println!("{}", t);
+        }\end{lstlisting}
+\end{frame}
+
+\begin{frame}[t,fragile]{enum (5/5)}
+\begin{itemize}
+ \item 構造体型ヴァリアントの例
+\end{itemize}
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
+enum Shape {
+    Sphere { center: Point3d, radius: f32 },
+    Cuboid { corner1: Point3d, corner2: Point3d },
+}
+// 略
+    match &u {
+        Shape::Cuboid {
+            corner1: c1,
+            corner2: c2,
+        } => {
+            println!("{:?}", c1);
+        }\end{lstlisting}
+ \begin{itemize}
+  \item 便利だが、やりすぎると型のサイズが無駄に大きくなる
+	\begin{itemize}
+	 \item 最大サイズのヴァリアントに合わさるため
+	 \item 大きなヴァリアントをヒープに置けるようにするBox型を用いる
+	 \item Box型については本日は扱いません!!
+	\end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[t,fragile]{\texttt{Option}<T>と\texttt{Result}<\texttt{T,E}> (1/)}
+ \begin{itemize}
+  \item Rustの標準的な型
+  \item 定義は以下のようになっている
+ \end{itemize}
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
+pub enum Option<T> {
+    None,
+    Some(T),
+}
+
+pub enum Result<T, E> {
+    Ok(T),
+    Err(E),
+}\end{lstlisting}
+\begin{itemize}
+  \item \verb|Option<T>|
+	\begin{itemize}
+	 \item 値がない可能性がある事を示す (nullptrの代わり)
+	\end{itemize}
+ \item \verb|Result<T,E>|
+       \begin{itemize}
+	\item 失敗する可能性がある事を示す (例外の代わり)
+       \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t,fragile]{\texttt{Option}<T>と\texttt{Result}<\texttt{T,E}> (2/2)}
+ \begin{itemize}
+  \item 以下のような感じでエラー判定する
+	\begin{itemize}
+	 \item 色々と便利な関数や演算子があります. (?演算子, expect(), unwrap())
+	\end{itemize}
+ \end{itemize}
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
+    let i = match env::args().nth(1) {
+        None => {
+            panic!("no arguments");
+        }
+        Some(arg) => match arg.parse::<i32>() {
+            Ok(fig) => fig,
+            Err(e) => {
+                panic!("error: {}", e);
+            }
+        },
+    };
+
+    println!("i: {}", i);
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[t,fragile]{Crate (1/3)}
+ \begin{itemize}
+  \item Rustのプログラムはクレートと呼ばれる単位の組み合わせで構成される
+	\begin{itemize}
+	 \item 自分で作る方法は本日は省略するとして……
+	\end{itemize}
+  \item crate.io
+	\begin{itemize}
+	 \item The Rust community's crate registry
+	\end{itemize}
+  \item 使い方
+	\begin{itemize}
+	 \item Cargo.tomlの \verb|[dependencies]| に、crates.ioに書かれている式を入れればOK
+	 \item ここにgitのリポジトリをつっこむ事もできる
+	\end{itemize}
+  \item ここでは、オプション解析のcrateの\href{https://clap.rs/}{clap}を使った例を紹介します
+	\begin{itemize}
+	 \item \verb|-n| オプションだけあるechoコマンドもどき
+	\end{itemize}
+ \end{itemize}
+\begin{commandline}
+[dependencies]
+clap = "2.32.0"
+\end{commandline}
+\end{frame}
+
+\begin{frame}[t,fragile]{Crate (2/3)}
+\begin{itemize}
+ \item Rust 2018の前までは、 \verb|extern crate clap;| とする必要があった
+       \begin{itemize}
+	\item Cargo.tomlと冗長だったから(?)不要に
+	\item ただし \verb|use| は必要
+       \end{itemize}
+\end{itemize}
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
+use clap::{App, Arg};
+
+fn main() {
+    let m = App::new("echo")  // コマンド名
+        .arg(Arg::with_name("STRING").multiple(true))  // 複数の引数
+        .arg( // '-n' を定義
+            Arg::with_name("n")
+                .short("n")
+                .help("do not output the trailing newline"),
+        )
+        .get_matches();  // 実行
+// 続く\end{lstlisting}
+\end{frame}
+
+\begin{frame}[t,fragile]{Crate (3/3)}
+\begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
+// 続き
+    let out = match m.values_of("STRING") {
+        //          ↓地味にイテレータを使用
+        Some(v) => v.collect::<Vec<&str>>().join(" "),
+        None => "".into(),
+    };
+
+    print!("{}", out);
+
+    if !m.is_present("n") {
+        println!("");  // '-n'オプションがなければ改行
+    }
+}\end{lstlisting}
+\end{frame}
+
+\begin{frame}[t,fragile]{文法とかについては以上!!}
+\begin{itemize}
+ \item 本日まったくお伝えできなかった内容
+       \begin{itemize}
+	\item クロージャー
+	\item イテレーター
+	\item スマートポインタ
+	\item テスト
+	      \begin{itemize}
+	       \item Rustはプログラムと同じファイルにテストを書いたり、
+		     コメントのサンプルプログラムのテストとかもできる
+	      \end{itemize}
+       \end{itemize}
+ \item 興味があれば、 The Book をお読みください
+\end{itemize}
+\end{frame}
+
+\takahashi[40]{つかれた……}
 \takahashi[30]{ようやくDebian要素}
 
 \begin{frame}[t,fragile]{Debianパッケージにしてみる}
@@ -538,15 +1113,28 @@ fn generate(i: i32) -> Vec<i32> {
 	       \begin{itemize}
 		\item 公式にはとても入らないdebを吐く
 		\item 単一バイナリのプロジェクトにしか対応していない
+		\item だからdebになっとらんのか……
 	       \end{itemize}
 	 \item まぁ、えいやと/usr/binに入れたいならアリかもですが……
 	\end{itemize}
  \end{itemize}
 \end{frame}
 
-%\begin{frame}[t,fragile]{真面目にDebianパッケージにしてみる}
-% 
-%\end{frame}
+\begin{frame}[t,fragile]{真面目にDebianパッケージにしてみる}
+ \begin{itemize}
+  \item Debian Rust packaging team
+	\begin{itemize}
+	 \item \url{https://wiki.debian.org/Teams/RustPackaging}
+	\end{itemize}
+  \item crates.ioにあるものについてはdebcargoがいい感じにやってくれるらしい
+	\begin{itemize}
+	 \item 実際に \verb|debcargo package ripgrep| をするとl
+	       ripgrepのdebが作られる
+	 \item ところが、このdebcargoさん、crates.ioにアップされている物しか
+	       debにしてくれない模様……
+	\end{itemize}
+ \end{itemize}
+\end{frame}
 
 \begin{frame}[t,fragile]{\texttt{dh\_make}する}
 \begin{commandline}
