@@ -107,6 +107,7 @@ pdfsubject={資料},%
 	 \item Servo(絶賛開発中)というブラウザエンジンのために開発
 	 \item 安全性・並行性について考えられて設計されている
 	 \item 静的型付け言語
+	 \item 学習曲線がツライとうわさ
 	\end{itemize}
   \item カニ?
 	\begin{itemize}
@@ -116,6 +117,11 @@ pdfsubject={資料},%
 		\item オライリー本の表紙はオオヒロバオウギガニ
 		\item 非公式なマスコットもカニ \href{http://rustacean.net/}{(Ferrisっていう模様)}
 	       \end{itemize}
+	\end{itemize}
+  \item Rustのファイルの拡張子は .rs
+	\begin{itemize}
+	 \item Rustで書かれたプロジェクトの公式サイトが \verb|http://xxx.rs| であることが多い
+	 \item 国別コードトップドメイン .rs : セルビア
 	\end{itemize}
  \end{itemize}
 \end{frame}
@@ -138,6 +144,7 @@ pdfsubject={資料},%
 		    \begin{itemize}
 		     \item そしてたまに壊れる
 		     \item 壊れるといっても、コンパイラがおかしくなった事はないです
+		     \item 10年前くらいのsidの気分を味わえます
 		    \end{itemize}
 	 \item[completions] シェルの補完用のコードを吐く (bash, zsh, fish, \textbf{PowerShell}, etc..)
 	\end{description}
@@ -209,6 +216,9 @@ fn main() {
 }\end{lstlisting}
 \begin{itemize}
  \item 実行するには \verb|cargo run|
+       \begin{itemize}
+	\item 実はデバッグビルドなので、最適化をかけるには\verb|--release|をつける
+       \end{itemize}
 \end{itemize}
 \begin{commandline}
 % cargo run
@@ -701,6 +711,7 @@ fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
        \begin{itemize}
 	\item 素直に(?)構造体を使う
 	\item 定義時は各要素の名前が必要 (まったく同名の変数で初期化するときのみ省略可)
+	\item 本日は扱いませんが、ライフタイムも絡んでくる
        \end{itemize}
 \end{itemize}
 \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
@@ -763,6 +774,9 @@ struct GenPoint<T> {
 \begin{frame}[t,fragile]{Trait (1/5)}
  \begin{itemize}
   \item JavaとかGoのインターフェース的なものもある -> Trait(トレイト)
+	\begin{itemize}
+	 \item さきほど出てきた Copy trait もコレ
+	\end{itemize}
   \item traitの定義は以下のように \texttt{trait} キーワードで作る
 	\begin{itemize}
 	 \item duckはwalkしてquackできるもの
@@ -1040,7 +1054,6 @@ clap = "2.32.0"
  \item Rust 2018の前までは、 \verb|extern crate clap;| とする必要があった
        \begin{itemize}
 	\item Cargo.tomlと冗長だったから(?)不要に
-	\item ただし \verb|use| は必要
        \end{itemize}
 \end{itemize}
 \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
@@ -1062,7 +1075,7 @@ fn main() {
 \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
 // 続き
     let out = match m.values_of("STRING") {
-        //          ↓地味にイテレータを使用
+        //         ↓地味にイテレータを使用
         Some(v) => v.collect::<Vec<&str>>().join(" "),
         None => "".into(),
     };
@@ -1089,11 +1102,23 @@ fn main() {
 	      \end{itemize}
        \end{itemize}
  \item 興味があれば、 The Book をお読みください
+ \item 再掲: ビルドするとCargo.lockというファイルが生成される
+       \begin{itemize}
+	\item Cargo.tomlはざっくりとした依存を手動で作成
+	      \begin{itemize}
+	       \item バージョン番号もメジャーバージョンだけ記述できる
+	      \end{itemize}
+	\item Cargo.lockは完全なバージョンやハッシュ値を持って
+	      Cargoがビルド時に自動で作成
+	      \begin{itemize}
+	       \item アップデートしたければ \verb|cargo update| を実行
+	      \end{itemize}
+       \end{itemize}
 \end{itemize}
 \end{frame}
 
 \takahashi[40]{つかれた……}
-\takahashi[30]{ようやくDebian要素}
+\takahashi[30]{ようやくDebian要素\\ \vfill \tiny{しりすぼみになるよ……}}
 
 \begin{frame}[t,fragile]{Debianパッケージにしてみる}
  \begin{itemize}
@@ -1106,7 +1131,7 @@ fn main() {
 	       \end{itemize}
 	 \item インストール方法
 	       \begin{itemize}
-		\item \verb|cargo install cargo-deb|
+		\item \verb|cargo install cargo-deb| : \verb|cargo|のサブコマンドとして入る
 		\item debは……ない……!!
 	       \end{itemize}
 	 \item 問題点
@@ -1128,33 +1153,269 @@ fn main() {
 	\end{itemize}
   \item crates.ioにあるものについてはdebcargoがいい感じにやってくれるらしい
 	\begin{itemize}
-	 \item 実際に \verb|debcargo package ripgrep| をするとl
+	 \item 実際に \verb|debcargo package ripgrep| をすると
 	       ripgrepのdebが作られる
-	 \item ところが、このdebcargoさん、crates.ioにアップされている物しか
-	       debにしてくれない模様……
+	 \item ところが、このdebcargoさん、\\
+	       crates.ioにアップされている物しかdebにしてくれない模様……
+	\end{itemize}
+  \item これ以降では、先程のclapのサンプルのdeb作成に挑戦します
+	\begin{itemize}
+	 \item 方針として、debcargoでも使う \verb|dh-cargo| を使う
+	 \item \url{https://github.com/rarewin/clap-test} にソース置いてます
 	\end{itemize}
  \end{itemize}
 \end{frame}
 
 \begin{frame}[t,fragile]{\texttt{dh\_make}する}
 \begin{commandline}
-% dh_make -p rwget_0.1.0 --createorig
-Type of package: (single, indep, library, python)
-[s/i/l/p]?
+% dh_make -s -p rust-clap-test_0.1.0 --createorig
 Maintainer Name     : Katsuki Kobayashi
 Email-Address       : rare@tirasweel.org
-Date                : Sun, 17 Mar 2019 20:33:47 +0900
-Package Name        : rwget
+Date                : Sat, 23 Mar 2019 18:03:48 +0900
+Package Name        : rust-clap-test
 Version             : 0.1.0
 License             : blank
 Package Type        : single
 Are the details correct? [Y/n/q]
-Currently there is not top level Makefile. This may require additional tuning
-Done. Please edit the files in the debian/ subdirectory now.
+Currently there is not top level Makefile. This may require additional
+tuning Done. Please edit the files in the debian/ subdirectory now.
+\end{commandline}
+\begin{itemize}
+ \item debcargoを使うと、パッケージ名には \texttt{rust-} もしくは \texttt{librust-} が\\
+       suffixとして付く模様
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t,fragile]{\texttt{dh-cargo}を使うようにする}
+\begin{itemize}
+ \item ひとまず以下をしてみる
+       \begin{itemize}
+	\item debian/rulesにオプションを追加
+	\item debian/controlのBuild-Dependsにdh-cargo/librust-clap-devを入れる
+       \end{itemize}
+ \end{itemize}
+\begin{commandline}
+%:
+dh $@ --buildsystem cargo
+\end{commandline}
+\begin{itemize}
+ \item とりあえず debuild-pbuilder してみる
+\end{itemize}
+\begin{commandline}
+% debuild-pbuilder
+-> Attempting to satisfy build-dependencies
+-> Creating pbuilder-satisfydepends-dummy package
+Package: pbuilder-satisfydepends-dummy
+Version: 0.invalid.0
+... (snip) ...
+dh_autoreconf -O--buildsystem=cargo
+dh_auto_configure -O--buildsystem=cargo
+cp: './debian/cargo-checksum.json' を stat できません: \
+そのようなファイルやディレクトリはありません
 \end{commandline}
 \end{frame}
 
-\takahashi[50]{以上}
+\begin{frame}[t,fragile]{cargo-checksum.json?}
+\begin{itemize}
+ \item RustPackagingTeam
+       \begin{itemize}
+	\item upstreamのcrateのチェックサムを含める
+	\item \verb|/usr/share/cargo/registry| を使うために使う
+	      \begin{itemize}
+	       \item debのビルドにネットワーク使っちゃ駄目だからと思われ
+	      \end{itemize}
+	\item ↑の仕組みはcargo-vendorを利用している
+	      \begin{itemize}
+	       \item cargo-vendorはローカルのソースを
+		     cargoが外部crateとして扱うための仕組みを提供
+	      \end{itemize}
+       \end{itemize}
+ \item とか、わりと不親切に書いてある(作り方の解説とかない)んですが……
+\end{itemize}
+\onslide<2>
+\begin{commandline}
+% apt source ripgrep
+% cat rust-ripgrep-0.10.0/debian/cargo-checksum.json
+{"package":"Could not get crate checksum","files":{}}
+\end{commandline}
+\begin{itemize}
+ \item いったんわすれます
+       \begin{itemize}
+	\item なんと、\verb|touch debian/cargo-checksum.json| でビルドが進む
+	\item この ``could not get crate checksum''は
+	      \href{https://salsa.debian.org/search?utf8=%E2%9C%93&search=Could+not+get+crate+checksum&group_id=&project_id=13127&search_code=true&repository_ref=master}
+	      {debcargoのエラー}みたいです
+       \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t,fragile]{依存地獄と闇と (1/4)}
+\begin{itemize}
+ \item ビルドが進むようになったはよいが
+\end{itemize}
+\begin{commandline}
+debian cargo wrapper: running subprocess (['env', 'RUST_BACKTRACE=1', \
+'/usr/bin/cargo', '-Zavoid-dev-deps', 'build', '--verbose', '--verbose', \
+'-j4', '--target', 'x86_64-unknown-linux-gnu'],) {}
+error: failed to select a version for the requirement \
+`textwrap = "= 0.10.0"`
+candidate versions found which didn't match: 0.11.0
+location searched: directory source `/path/to/clap-test/debian/cargo_registry` \
+(which is replacing registry `https://github.com/rust-lang/crates.io-index`)
+required by package `clap v2.32.0`
+\end{commandline}
+\begin{itemize}
+ \item 何故かtextwrapのバージョン問題で失敗……
+       \begin{itemize}
+	\item clapは0.10.0のtextwrapを要求
+	\item 現在のdebian sid/busterのlibrust-textwrap-devは0.11.0
+       \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t,fragile]{依存地獄と闇と (2/4)}
+ \begin{itemize}
+  \item しかしなぜ? 🤔🤔🤔🤔
+	\begin{itemize}
+	 \item ripgrepもclapに依存しているのにビルドできている
+	\end{itemize}
+  \item githubのripgrepのtarとdebのripgrepのソースを比較してみる
+	\begin{itemize}
+	 \item 微妙に差分がある……
+	 \item どうやら、crates.ioから持ってくると、
+	       Cargo.tomlが編集され(Cargo.tomlにコメントあり)、
+	       Cargo.lockが削除される模様(こっちはあやふや)
+	\end{itemize}
+ \end{itemize}
+\begin{commandline}
+% grep textwrap Cargo.lock
+"textwrap 0.10.0 (registry+https://github.com/rust-lang/crates.io-index)",
+name = "textwrap"
+"checksum textwrap 0.10.0 (registry+https://github.com/rust-lang/crates.io-index)" \
+= "307686869c93e71f94da64286f9a9524c0f308a9e1c87a583de8e9c9039ad3f6"
+\end{commandline}
+\begin{itemize}
+ \item うーむ……
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t,fragile]{依存地獄と闇と (3/4)}
+\begin{commandline}
+% rm Cargo.lock
+% debuild-pbuilder
+... (snip) ...
+Compiling textwrap v0.11.0
+Running `rustc --crate-name textwrap....
+... (snip) ...
+Finished running lintian.
+\end{commandline}
+\begin{itemize}
+ \item なんと、Cargo.lockを消したらビルドできてしまった……
+       \begin{itemize}
+	\item debian/cargo\_registry 以下に依存crateのローカル
+       \end{itemize}
+\end{itemize}
+\begin{commandline}
+% ls -lh debian/cargo_registry/textwrap-*
+... debian/cargo_registry/textwrap-0.11.0 \
+-> /usr/share/cargo/registry/textwrap-0.11.0/
+\end{commandline}
+\end{frame}
+
+\begin{frame}[t,fragile]{依存地獄と闇と (4/4)}
+\begin{itemize}
+ \item よくよく調べてみると、clapのCargo.tomlが、
+       crates.io登録時に依存関係が変更されている模様……
+\end{itemize}
+\begin{commandline}
+% grep -A 1 dependencies.textwrap debian/cargo_registry/clap-2.32.0/Cargo.toml
+[dependencies.textwrap]
+version = ">= 0.10, < 0.12"
+\end{commandline}
+\begin{itemize}
+ \item どういう基準で変更されたのかは
+       まだ調べておりません……
+       \begin{itemize}
+	\item debianのlibrust-*なパッケージたちはどのような
+	      基準で更新されているのだろうか……
+       \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t,fragile]{とにもかくにも (1/2)}
+\begin{itemize}
+ \item debはできました!!
+       \begin{itemize}
+	\item いや、lintianの警告もエラーも取ってないですが!!
+       \end{itemize}
+\end{itemize}
+\begin{commandline}
+% dpkg -I rust-clap-test_0.1.0-1_amd64.deb
+new Debian package, version 2.0.
+size 258160 bytes: control archive=648 bytes.
+360 バイト、   11 行      control
+285 バイト、    4 行      md5sums
+Package: rust-clap-test
+Version: 0.1.0-1
+Architecture: amd64
+Maintainer: Katsuki Kobayashi <rare@tirasweel.org>
+Installed-Size: 770
+Depends: libc6 (>= 2.18), libgcc1 (>= 1:4.2)
+Section: unknown
+Priority: optional
+Homepage: <insert the upstream URL, if relevant>
+Description: <insert up to 60 chars description>
+<insert long description, indented with spaces>
+\end{commandline}
+\end{frame}
+
+\begin{frame}[t,fragile]{とにもかくにも (2/2)}
+\begin{commandline}
+% dpkg -c rust-clap-test_0.1.0-1_amd64.deb
+drwxr-xr-x root/root         0 2019-03-23 18:06 ./
+drwxr-xr-x root/root         0 2019-03-23 18:06 ./usr/
+drwxr-xr-x root/root         0 2019-03-23 18:06 ./usr/bin/
+-rwxr-xr-x root/root    776600 2019-03-23 18:06 ./usr/bin/clap-test
+drwxr-xr-x root/root         0 2019-03-23 18:06 ./usr/share/
+drwxr-xr-x root/root         0 2019-03-23 18:06 ./usr/share/doc/
+drwxr-xr-x root/root         0 2019-03-23 18:06 ./usr/share/doc/rust-clap-test/
+-rw-r--r-- root/root       197 2019-03-23 18:06 ./usr/share/doc/rust-clap-test/README.Debian
+-rw-r--r-- root/root       190 2019-03-23 18:06 ./usr/share/doc/rust-clap-test/changelog.Debian.gz
+-rw-r--r-- root/root      1693 2019-03-23 18:06 ./usr/share/doc/rust-clap-test/copyright
+\end{commandline}
+\begin{itemize}
+ \item あれだけのプログラムで800KBちかくかぁ……
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t,fragile]{まとめ!!}
+\begin{itemize}
+ \item 結局Rustなdebを作るには
+       \begin{itemize}
+	\item crates.ioに登録してdebcargoをベースに動かすのが公式手法
+	\item 一応、ローカルでdh-cargoをつかっても対応はできそう
+	\item debcargoをgitリポジトリに対応させても良さそうだけど
+	      Cargo.toml/Cargo.lockまわりの問題はあり?
+       \end{itemize}
+ \item そもそも依存関係大丈夫?
+       \begin{itemize}
+	\item 今回は調べきれなかったですが、debのlibrust-*パッケージまわりは
+	      結構あぶない橋を渡っているかも……?
+	\item このあいだ(2月)にripgrepがビルドできないというbusterのバグがあったし……
+	      \href{https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=920958}{\#920958}
+       \end{itemize}
+ \item それでもRustは良い言語
+       \begin{itemize}
+	\item 少々学習曲線がアレだけど、これから流行っていくに違いない
+	\item Debianでもコミュニティが活発になればよいなぁ (他人事)
+	\item 粛々とdebcargoは開発されているようで、先週busterには入らないけど
+	      \href{https://alioth-lists.debian.net/pipermail/pkg-rust-maintainers/2019-March/005296.html}
+	      {post-installでtestがきるようになったり}している模様
+       \end{itemize}
+\end{itemize}
+\end{frame}
+
+ \takahashi[50]{以上\\ \vspace*{10pt} \small{ご静聴ありがとうございました}}
 
 \begin{frame}[t,fragile]{どっかに挿入予定のメモ}
  \begin{itemize}
