@@ -33,4 +33,9 @@ fn main() {
     // let _p4 = GenPoint { x: 1.5, y: 2 };
 
     let _p5 = GenPoint2 { x: 1.5, y: 2 };
+
+    let x = 0.0;
+    let y = 0.0;
+
+    let _p6 = GenPoint { x, y };
 }

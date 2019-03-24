@@ -522,7 +522,7 @@ fn generate(i: i32) -> Vec<i32> {
 
 \begin{frame}[t,fragile]{参照, 借用(1/2)}
  \begin{itemize}
-  \item 所有権を渡したい場合には参照を使う
+  \item 所有権を渡さずに値を使うには参照を使う
 	\begin{itemize}
 	 \item Rustでは「借用」とも言う
 	 \item C++とおなじく、 ``\texttt{\&}'' を使う
@@ -588,6 +588,10 @@ error[E0425]: cannot find value `a` in this scope
 \begin{frame}[t,fragile]{ライフタイム(2/6)}
 \begin{itemize}
  \item 参照していた場合、\textbf{コンパイル時}に怒られる
+       \begin{itemize}
+	\item C/C++でよくやる解放済みのメモリアクセスとかが
+	      コンパイル時に発見できる!!
+       \end{itemize}
 \end{itemize}
 \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
     let r;
@@ -672,7 +676,7 @@ error[E0106]: missing lifetime specifier
 	\end{itemize}
   \item んじゃどうするの?
 	\begin{itemize}
-	 \item コンパイラが怒っている通り、lifetime specifierを書けばOK
+	 \item コンパイラが怒っている通り、lifetime parameterを書けばOK
 	 \item 基本的にRustのコンパイラのエラーメッセージは親切です
 	       \begin{itemize}
 		\item 一部のコンパイラがカオスなだけもしれませんが……
@@ -710,7 +714,7 @@ fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
  \item Rustにはclassはない
        \begin{itemize}
 	\item 素直に(?)構造体を使う
-	\item 定義時は各要素の名前が必要 (まったく同名の変数で初期化するときのみ省略可)
+	\item 値の宣言時は各要素の名前が必要 (まったく同名の変数で初期化するときのみ省略可)
 	\item 本日は扱いませんが、ライフタイムも絡んでくる
        \end{itemize}
 \end{itemize}
@@ -728,7 +732,7 @@ struct Point {
 \begin{itemize}
  \item 構造体だけど、関数を生やせるよww
        \begin{itemize}
-	\item メンバー変数を使いたい場合は\texttt{self}(値を変更したい場合は\texttt{mut}を付ける)
+	\item 最初の引数は\texttt{self}(値を変更したい場合は\texttt{mut}を付ける)
        \end{itemize}
 \end{itemize}
 \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
@@ -885,7 +889,7 @@ enum Fruits {
 
 \begin{frame}[t,fragile]{enum (2/5)}
  \begin{itemize}
-  \item enum変数の中に値を持つことができる
+  \item enum値の中に値を持つことができる
 	\begin{itemize}
 	 \item しかも、型も個数も自由自在
 	 \item \verb|(u8, u8, u8, u8)| はタプル
@@ -899,13 +903,19 @@ enum IpAddr {
 // 略
     let v4_addr = IpAddr::V4((127, 0, 0, 1));
     let v6_addr = IpAddr::V6("::1".into());\end{lstlisting}
+\begin{itemize}
+ \item なお、enumにもメソッドを生やせますwww
+       \begin{itemize}
+	\item structのときと同じく、implキーワードを使う
+       \end{itemize}
+\end{itemize}
 \end{frame}
 
 \begin{frame}[t,fragile]{enum (3/5)}
 \begin{itemize}
  \item 値を持たせたenumはmatchを使って取り出すことができる
        \begin{itemize}
-	\item C言語のswitch分のdefault的なのは ``\verb|_ =>|'' と書く
+	\item C言語のswitch文のdefault的なのは ``\verb|_ =>|'' と書く
        \end{itemize}
 \end{itemize}
 \begin{lstlisting}[language=Rust,style=boxed,style=colouredRust,basicstyle=\small\tt,lineskip=-2pt]
@@ -972,7 +982,7 @@ enum Shape {
  \end{itemize}
 \end{frame}
 
-\begin{frame}[t,fragile]{\texttt{Option}<T>と\texttt{Result}<\texttt{T,E}> (1/)}
+\begin{frame}[t,fragile]{\texttt{Option}<T>と\texttt{Result}<\texttt{T,E}> (1/2)}
  \begin{itemize}
   \item Rustの標準的な型
   \item 定義は以下のようになっている
@@ -1027,9 +1037,9 @@ pub enum Result<T, E> {
  \begin{itemize}
   \item Rustのプログラムはクレートと呼ばれる単位の組み合わせで構成される
 	\begin{itemize}
-	 \item 自分で作る方法は本日は省略するとして……
+	 \item 詳細については本日は省略するとして……
 	\end{itemize}
-  \item crate.io
+  \item crates.io
 	\begin{itemize}
 	 \item The Rust community's crate registry
 	\end{itemize}
@@ -1118,7 +1128,10 @@ fn main() {
 \end{frame}
 
 \takahashi[40]{つかれた……}
-\takahashi[30]{ようやくDebian要素\\ \vfill \tiny{しりすぼみになるよ……}}
+\takahashi[20]{ひとまず\\Rustはコンパイラに怒られながら\\せっせと直していく言語です}
+\takahashi[40]{ということで}
+\takahashi[40]{おまたせしました}
+\takahashi[30]{\vspace*{2zw}ようやくDebian要素です\\ \vfill \onslide<2>\tiny{しりすぼみになるよ……}}
 
 \begin{frame}[t,fragile]{Debianパッケージにしてみる}
  \begin{itemize}
@@ -1333,6 +1346,15 @@ Finished running lintian.
 version = ">= 0.10, < 0.12"
 \end{commandline}
 \begin{itemize}
+ \item GitHubにあるclapのコードだと以下
+\end{itemize}
+\begin{commandline}
+[dependencies]
+bitflags              = "1.0"
+unicode-width         = "0.1.4"
+textwrap              = "0.10.0"
+\end{commandline}
+\begin{itemize}
  \item どういう基準で変更されたのかは
        まだ調べておりません……
        \begin{itemize}
@@ -1388,11 +1410,11 @@ drwxr-xr-x root/root         0 2019-03-23 18:06 ./usr/share/doc/rust-clap-test/
 \end{itemize}
 \end{frame}
 
-\begin{frame}[t,fragile]{まとめ!!}
+\begin{frame}[t,fragile]{とうとつにまとめ!!}
 \begin{itemize}
  \item 結局Rustなdebを作るには
        \begin{itemize}
-	\item crates.ioに登録してdebcargoをベースに動かすのが公式手法
+	\item crates.ioに登録してdebcargoをベースにつくるが公式手法
 	\item 一応、ローカルでdh-cargoをつかっても対応はできそう
 	\item debcargoをgitリポジトリに対応させても良さそうだけど
 	      Cargo.toml/Cargo.lockまわりの問題はあり?
