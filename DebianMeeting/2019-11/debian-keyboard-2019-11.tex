@@ -53,6 +53,20 @@ pdfsubject={資料},%
 }
 %end of commandline
 
+\newenvironment{tinycommandline}%
+{\VerbatimEnvironment
+  \begin{Sbox}\begin{minipage}{0.9\hsize}\begin{fontsize}{4}{4} \color{white} \begin{BVerbatim}}%
+{\end{BVerbatim}\end{fontsize}\end{minipage}\end{Sbox}
+  \setlength{\fboxsep}{8pt}
+% start on a new paragraph
+
+\vspace{6pt}% skip before
+\fcolorbox{white}{black}{\TheSbox}
+
+\vspace{3pt}% skip after
+}
+%end of tinycommandline
+
 \begin{document}
 
 \begin{frame}[fragile]
@@ -125,7 +139,8 @@ pdfsubject={資料},%
 	 \item でもお値段的に
 	       \begin{itemize}
 		\item 最小構成でも275ドル
-		\item トラックポイントつけたらいレストアームつけると4万円越え
+		\item トラックポイントつけたり、レストアームつけると4万円越え
+		\item 海外なので、送料やら納期がなぁ……
 	       \end{itemize}
 	\end{itemize}
  \end{itemize}
@@ -218,7 +233,9 @@ pdfsubject={資料},%
 \end{frame}
 
 \begin{frame}[fragile,t]{キースイッチ(2/)}
+ \vspace*{-1zw}
  \begin{center}
+  \footnotesize
   \begin{tabular}[tb]{c|cccc}
    軸       & クリック感 & 音       & 重さ   & 深さ \\ \hline
    ピンク軸 & なし       & しずか   & かるめ\\
@@ -230,21 +247,41 @@ pdfsubject={資料},%
   \end{tabular}
  \end{center}
  \begin{flushright}
-  参考: \url{https://www.diatec.co.jp/products/CHERRY/}
+  {\footnotesize 参考: \url{https://www.diatec.co.jp/products/CHERRY/}}
  \end{flushright}
-\begin{itemize}
- \item 既製品だと全体同じ軸だが、 \textbf{自作だと自由自在}
+ \begin{center}
+  \includegraphics[keepaspectratio,width=3.3cm]{./img/actuation-red.jpg}
+  \includegraphics[keepaspectratio,width=3.3cm]{./img/actuation-brown.jpg}
+  \includegraphics[keepaspectratio,width=3.3cm]{./img/actuation-blue.jpg}
+ \end{center}
+ \begin{flushright}
+  {\footnotesize 引用: \url{https://www.cherrymx.de/en/mx-original/mx-red.html}}
+\end{flushright}
+\end{frame}
+
+\begin{frame}[fragile,t]{キースイッチ(3/)}
+ \begin{itemize}
+  \item 既製品でも軸は選べる
        \begin{itemize}
+	\item \textbf{自作だと配置は自由自在}
 	\item 小指周りは軽めのスイッチを配置したり
+	\item enter keyだけカチカチさせたり
 	\item \href{https://yushakobo.jp/shop/a01ps/}{ソケット}を付けておいて後で変更できるようにしたり
        \end{itemize}
-\end{itemize}
+ \end{itemize}
+ \begin{center}
+ \includegraphics[keepaspectratio,height=2cm]{./img/key-socket.jpg}
+ \end{center}
+ \begin{flushright}
+  \footnotesize 引用元: \url{https://yushakobo.jp/shop/a01ps/}
+ \end{flushright}
 \end{frame}
 
 \begin{frame}[fragile,t]{マイコン}
  \begin{itemize}
   \item \href{https://www.sparkfun.com/products/12640}{Sparkfun社が出している} Arduino互換ボード
 	\begin{itemize}
+	 \item Atmel AVR
 	 \item とてもコンパクトだけどピン数は結構ある
 	 \item ArduinoのIDEが使える
 	 \item 定価は結構おたかめ…… \$19.95
@@ -252,12 +289,100 @@ pdfsubject={資料},%
   \item Promicroの互換品を使うのが現在の主流
 	\begin{itemize}
 	 \item おやすい (クローン品だと500円とかで手に入る)
-	 \item 情報が多いく、キーボードFW用のフレームワークがある(後述)
+	 \item 情報が多いく、キーボードFW用の環境がある(後述)
+	\end{itemize}
+ \end{itemize}
+\begin{center}
+ \includegraphics[keepaspectratio,height=3cm]{./img/promicro_01.jpg}
+ \hspace*{1zw}
+ \includegraphics[keepaspectratio,height=3cm]{./img/promicro_02.jpg}
+ \hspace*{1zw}
+ \includegraphics[keepaspectratio,height=3cm]{./img/promicro_compat.jpg}
+ \vspace*{-1zw}
+\end{center}
+\begin{flushright}
+ {\footnotesize 引用: \url{https://www.sparkfun.com/products/12640}\\[-.5zw]
+ \url{https://yushakobo.jp/shop/promicro-spring-pinheader/}}
+\end{flushright}
+\end{frame}
+
+\begin{frame}[fragile,t]{キーマトリックス回路}
+ \begin{itemize}
+  \item さすがにキーボード全てのキーをカバーするほどのピン数はない
+  \item キーマトリックス回路をつくってスキャンする
+	\begin{itemize}
+	 \item 例) 8ピンで16キーを使う場合
+	       \begin{itemize}
+		\item col0, col1, col2, col3と順次Hiに
+		\item 対応するrow0, row1, row2, row3の入力を見る
+		\item ダイオードが入ってないと誤判定する
+	       \end{itemize}
+	\end{itemize}
+ \end{itemize}
+ \begin{center}
+  \includegraphics[keepaspectratio,height=4cm]{./img/key-matrix.jpg}
+ \end{center}
+\end{frame}
+
+\begin{frame}[fragile,t]{分割型キーボード}
+ \begin{itemize}
+  \item 分割型のキーボードの一般的な構成
+	\begin{itemize}
+	 \item 左右両方の基板にマイコンを載せる
+	 \item 基板の間を3/4線のシリアル通信させる
+	 \item 通信には3.5mmプラグのケーブル(オーディオでよく使うアレ)を使うのが現在の主流
+	       \begin{itemize}
+		\item TRS(3極: モノラルケーブル)
+		\item TRRS(4極: ステレオケーブル)
+	       \end{itemize}
+	 \item TRSの場合は通信時に送受信を切り替えて実施している
+	       \begin{itemize}
+		\item VCC/GNDで2極使用するため
+		\item かつてはTRRSのケーブルやらジャックが入手しづらかったらしい?
+	       \end{itemize}
 	\end{itemize}
  \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile,t]{一般的な自作キーボードの構成}
+
+\begin{frame}[fragile,t]{一般的な自作キーボードキットの構成}
+ \begin{itemize}
+  \item 大体のキットについてくるもの
+	\begin{itemize}
+	 \item 基板 (基盤と書くと警察が来る)
+	 \item マイコン -- 大体Promicro
+	 \item プレート -- カバー
+	 \item ダイオード -- キーマトリックス用
+	 \item リセットスイッチ -- ファーム焼きのため
+	 \item OLED(オプション)
+	 \item LED(オプション)
+	\end{itemize}
+  \item 自分で用意する場合があるもの
+	\begin{itemize}
+	 \item キースイッチ
+	 \item キーキャップ
+	 \item ケーブル (USB/TRRS)
+	\end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,t]{キーボードの組み立てに必要なもの}
+ \begin{itemize}
+  \item 必須
+	\begin{itemize}
+	 \item はんだ (素直に鉛入りを使いましょう。換気注意。)
+	 \item はんだごて (温調可能なものがベター。LEDチップを付けるならほぼ必須)
+	 \item はんだごて台 (汚れ落としは水を使わないやつの方が良い)
+	\end{itemize}
+  \item あった方良い
+	\begin{itemize}
+	 \item ラジオペンチ
+	 \item ニッパー (ダイオードが素子ならほぼ必須)
+	 \item ピンセット
+	 \item テスター
+	 \item はんだ吸い取り器 (吸い取り線は難易度高め)
+	\end{itemize}
+ \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile,t]{Mint60}
@@ -266,31 +391,320 @@ pdfsubject={資料},%
 	\begin{itemize}
 	 \item オーソドックスな分割60\%キーボード
 	 \item キースイッチ/キャップ付きのキットがあって購入しやすい
-	       \begin{itemize}
-		\item 大体のキットは、スイッチとキーキャップは別途用意する
-	       \end{itemize}
 	 \item 組み立ての難易度も低い
 	       \begin{itemize}
 		\item 半田付け難易度の高い素子(チップダイオード/チップLEDなど)はない \pause
-		\item ただし、発表者は未だにシリアル通信が動いていない
+		\onslide<2>{\item ただし、発表者は未だにシリアル通信が動いていない}
 	       \end{itemize}
 	\end{itemize}
  \end{itemize}
 \end{frame}
 
-\takahashi[30]{それでも満足できない\\アナタへ}
-\takahashi[30]{プリント基板自作手順}
+\begin{frame}[fragile,t]{Mint60組み立て}
+\end{frame}
 
-\begin{frame}[fragile,t]{PCB(1/)}
+\begin{frame}[fragile,t]{Mint60 使い心地}
  \begin{itemize}
-  \item 茶番は終わって本題に入ります \pause
-  \item ここまで見てきてわかったと思いますが \pause
-  \item 完璧なキットがみつからなければエンドゲームはあり得ません
+  \item 基本ホームポジション遵守派なので違和感少なめ
+	\begin{itemize}
+	 \item 自分が6を右手でも左手でも打ってる事に気付いた(Mint60では右手のみ)
+	 \item スペースキーは基本右手だが、カーソルキーに手があると左手で押していた
+	\end{itemize}
+  \item 肩凝り緩和を期待していたが、むしろ腰痛に効いた!!
  \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile,t]{キースキャン回路}
+\begin{frame}[fragile,t]{Helix}
+ \begin{itemize}
+  \item 遊舎工房の代表者さんが設計したキーボード
+ \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile,t]{ファームウェアのカスタマイズ (1/)}
+ \begin{itemize}
+  \item 主な自作キーボードキットは \href{https://qmk.fm/}{QMK Firmware} を利用している
+	\begin{itemize}
+	 \item Atmel AVRマイコンやARMのキーボード用ファーム
+	 \item 単純な設定ファイルを書くだけで新規FWを作れる
+	 \item Mint60やHelixはアップストリームにマージ済み
+	\end{itemize}
+  \item Debianで使うには
+ \end{itemize}
+ \begin{commandline}
+% sudo apt install gcc unzip wget zip gcc-avr binutils-avr avr-libc \
+dfu-programmer dfu-util gcc-arm-none-eabi binutils-arm-none-eabi \
+libnewlib-arm-none-eabi
+ \end{commandline}
+ \pause
+ \begin{itemize}
+  \item その後以下のようにビルドできる
+	\begin{itemize}
+	 \item (機種名):(キーマップ名)
+	\end{itemize}
+ \end{itemize}
+ \begin{commandline}
+% make helix:default
+% make mint60:default
+ \end{commandline}
+\end{frame}
+
+\begin{frame}[fragile,t]{ファームウェアのカスタマイズ (2/)}
+ \begin{itemize}
+  \item キーの入れ替え等は簡単にできる
+	\begin{itemize}
+	 \item \verb|keyboards/(キーボード名)/(キーマップ名)/keymap.c| の配列を編集する
+	 \item 例) Helixのコード
+	\end{itemize}
+ \end{itemize}
+ \vspace*{-.5zw}
+ \begin{tinycommandline}
+   * ,-----------------------------------------.             ,-----------------------------------------.
+   * |   `  |   1  |   2  |   3  |   4  |   5  |             |   6  |   7  |   8  |   9  |   0  | Del  |
+   * |------+------+------+------+------+------|             |------+------+------+------+------+------|
+   * | Tab  |   Q  |   W  |   E  |   R  |   T  |             |   Y  |   U  |   I  |   O  |   P  | Bksp |
+   * |------+------+------+------+------+------|             |------+------+------+------+------+------|
+   * | Ctrl |   A  |   S  |   D  |   F  |   G  |             |   H  |   J  |   K  |   L  |   ;  |  '   |
+   * |------+------+------+------+------+------+------+------+------+------+------+------+------+------|
+   * | Shift|   Z  |   X  |   C  |   V  |   B  |   [  |   ]  |   N  |   M  |   ,  |   .  |   /  |Enter |
+   * |------+------+------+------+------+------+------+------+------+------+------+------+------+------|
+   * |Adjust| Esc  | Alt  | GUI  | EISU |Lower |Space |Space |Raise | KANA | Left | Down |  Up  |Right |
+   * `-------------------------------------------------------------------------------------------------'
+   */
+  [_QWERTY] = LAYOUT( \
+      KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                      KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_DEL, \
+      KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                      KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC, \
+      KC_LCTL, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                      KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, \
+      KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_LBRC, KC_RBRC, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_ENT , \
+      ADJUST,  KC_ESC,  KC_LGUI, KC_LALT, EISU,    LOWER,   KC_SPC,  KC_SPC,  RAISE,   KANA,    KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT \
+      ),
+ \end{tinycommandline}
+ \vspace*{-.5zw}
+ \begin{itemize}
+  \item layerと呼ばれる、同時押し時に別のキーを割り合てる方法も実装されている
+	\begin{itemize}
+	 \item Helixの場合、Adjust/Lower/Raiseというキーがそれに相当
+	 \item 具体例) ``Lower'' + ``1'' = ``F1'', ``Raise'' + ``l'' / ``;'' = ``PageUP'' / ``PageDown''
+	 \item キーの機能でなくてもよい (LEDの設定変更)
+	\end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,t]{ファームウェアのカスタマイズ (3/)}
+ \begin{itemize}
+  \item 文字列の入力をするマクロキーの作成も簡単
+	\begin{itemize}
+	 \item enumとマクロを定義
+	 \item 配列を変更
+	\end{itemize}
+ \end{itemize}
+\begin{commandline}
+enum macro_keycodes {
+  KC_SAMPLEMACRO,
+  KC_HASH_DEBIAN,  /* 追加 */
+};
+
+//Macros
+#define M_SAMPLE M(KC_SAMPLEMACRO)
+#define M_HASH_DEB M(KC_HASH_DEBIAN)  /* 追加 */
+
+const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+
+      /* 中略 */
+      KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_HASH_DEBIAN/* KC_LBRC */,
+      /* 後略 */
+\end{commandline}
+\end{frame}
+
+\begin{frame}[fragile,t]{ファームウェアのカスタマイズ (4/)}
+\begin{itemize}
+ \item キー入力のハンドラに追加
+\end{itemize}
+
+\begin{commandline}
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+
+    /* 中略 */
+
+    case KC_HASH_DEBIAN:
+      if (record->event.pressed)
+        SEND_STRING("#debian #kansaidebian");
+      break;
+
+   /* 後略 */
+\end{commandline}
+\end{frame}
+
+\begin{frame}[fragile,t]{まとめ}
+ \begin{itemize}
+  \item 自作キーボード
+	\begin{itemize}
+	 \item 分離型とか
+	 \item 配列だとかキースイッチについて好みを考える
+	 \item 最初はあまり(極端にキーが少ないとか)奇抜なキーボードは避けた方が良い
+	 \item 組み立てはチップ(LED/ダイオード)がないキットであればそこまで難しくない
+	       \begin{itemize}
+		\item 動作確認はマメにしよう(経験者談)
+	       \end{itemize}
+	 \item キーマップは、結構試行錯誤が必要
+	\end{itemize}
+ \end{itemize}
+\end{frame}
+
+\takahashi[100]{.}
+\takahashi[100]{..}
+\takahashi[100]{...}
+\takahashi[30]{それでも満足できない\\アナタへ}
+\takahashi[30]{真のEndgameを目指す\\アナタへ}
+\takahashi[30]{プリント基板自作手順}
+
+\begin{frame}[fragile,t]{to make the end of battle}
+ \begin{itemize}
+  \item 茶番は終わって本題に入ります \pause
+  \item ここまで見てきてわかったと思いますが \pause
+  \item 完璧なキットがみつからなければEndgameはあり得ません \pause
+ \end{itemize}
+ \vspace*{1zw}
+ \begin{center}
+  {\huge Endgameのために\\基板から自作しましょう(錯乱)}
+ \end{center}
+ \pause
+ \begin{itemize}
+  \item なお、まだ志半ばです
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,t]{PCBの設計 -- 志半ば (1/)}
+ \begin{itemize}
+  \item 最近は個人でPCB(プリント基板)が気軽に作れるようになってきてる  らしい
+	\begin{itemize}
+	 \item \href{https://www.seeedstudio.com/fusion_pcb.html}{seeed}
+	 \item \href{https://www.elecrow.com/pcb-manufacturing.html}{ELECROW}
+	\end{itemize}
+  \item 10cmx10cmであれば、5 \textdollar くらいでつくれてしまう
+	\begin{itemize}
+	 \item (同じ)基板を10枚くらいつくってそれくらい
+	 \item むしろ送料の方が高いです(DHLとかにすると20 \textdollar とかになる)
+	\end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,t]{PCBの設計 -- 志半ば (2/)}
+ \begin{itemize}
+  \item 設計には?
+	\begin{itemize}
+	 \item KiCadというOSSがある
+	 \item Linux/Mac/Windowsどれでも動きます
+	 \item 公式debもあるよ!!
+	\end{itemize}
+ \end{itemize}
+ \begin{commandline}
+% apt search '^kicad$'
+ソート中... 完了
+全文検索... 完了
+kicad/unstable,now 5.1.5+dfsg1-1 amd64 [インストール済み]
+  電子回路および PCB 設計ソフトウェア
+ \end{commandline}
+\begin{itemize}
+ \item 参考になる文献
+       \begin{itemize}
+	\item \href{https://booth.pm/ja/items/941963}{KiCad 5.0 / 5.1 入門実習テキスト『KiCad Basics for 5.x』}
+	\item \href{https://booth.pm/ja/items/1044084}{自作キーボード設計入門}
+       \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,t]{PCBの設計 -- 志半ば (3/)}
+ \begin{itemize}
+  \item まずは回路図をつくります
+	\begin{itemize}
+	 \item キーボード用のパーツ(スイッチとかpromicroとか)
+	 \item 「自作キーボード設計入門」の作者がKiCad用ライブラリを公開してくれてます
+	 \item \url{https://github.com/foostan/kbd}
+	       \begin{itemize}
+		\item 適当な場所にcloneして「シンボルライブラリーを管理」で登録しましょう
+	       \end{itemize}
+	\end{itemize}
+ \end{itemize}
+ \begin{center}
+  \includegraphics[keepaspectratio,height=4cm]{./img/kicad-schematic.png}
+ \end{center}
+\end{frame}
+
+\begin{frame}[fragile,t]{PCBの設計 -- 志半ば (4/)}
+ \begin{itemize}
+  \item 次にフットプリントを関連付けます
+	\begin{itemize}
+	 \item フットプリントも先程の場所にライブラリが公開されてます
+	 \item 各パーツごとにフットプリントをどれにするか地道に選択していきます
+	       \begin{itemize}
+		\item Cherry MX / Kailhロープロの両対応のフットプリントもあります
+	       \end{itemize}
+	\end{itemize}
+ \end{itemize}
+ \begin{center}
+  \includegraphics[keepaspectratio,height=4cm]{./img/kicad-footprint.png}
+ \end{center}
+\end{frame}
+
+\begin{frame}[fragile,t]{PCBの設計 -- 志半ば (5/)}
+ \begin{itemize}
+  \item 次にレイアウトをしていきます
+	\begin{itemize}
+	 \item パーツが干渉しないように注意して……
+	 \item 発表者は現状ではここで力尽きてます
+	 \item キーのレイアウト用のツールもある
+	       \begin{itemize}
+		\item \url{http://www.keyboard-layout-editor.com/}
+	       \end{itemize}
+	\end{itemize}
+ \end{itemize}
+ \begin{center}
+  \includegraphics[keepaspectratio,height=4cm]{./img/kicad-layout.png}
+ \end{center}
+\end{frame}
+
+\begin{frame}[fragile,t]{PCBの設計 -- 志半ば (5/)}
+ \begin{itemize}
+  \item この後は……
+	\begin{itemize}
+	 \item エッジカット線を引く
+	 \item スペーサー用の穴をあける
+	 \item 配線を実施する(一番大変らしい)
+	 \item 必要に応じてケースを作成する
+	       \begin{itemize}
+		\item アクリル板を加工するのが主流
+		\item 最近は3Dプリンタ勢が増えているみたい……
+	       \end{itemize}
+	\end{itemize}
+  \item PCBデータが公開されているキーボードの改変をするという手もある
+	\begin{itemize}
+	 \item Helix : \url{https://github.com/MakotoKurauchi/helix}
+	 \item fortitude60: \url{https://github.com/Pekaso/fortitude60}
+	\end{itemize}
+ \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile,t]{まとめ(やりなおし)}
+ \begin{itemize}
+  \item 自作キーボード
+	\begin{itemize}
+	 \item 分離型とか
+	 \item 配列だとかキースイッチについて好みを考える
+	 \item 最初はあまり(極端にキーが少ないとか)奇抜なキーボードは避けた方が良い
+	 \item 組み立てはチップ(LED/ダイオード)がないキットであればそこまで難しくない
+	       \begin{itemize}
+		\item 動作確認はマメにしよう(経験者談)
+	       \end{itemize}
+	 \item キーマップは、結構試行錯誤が必要
+	\end{itemize}
+  \item PCBからの自作
+	\begin{itemize}
+	 \item 10cmx10cmでお試しするのがよさそう
+	 \item PCBデータの作成にはフリーのKiCadがつかえる
+	\end{itemize}
+ \end{itemize}
+\end{frame}
 
 \end{document}
